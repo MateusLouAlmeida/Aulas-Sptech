@@ -1,2 +1,2 @@
 # Aulas-Sptech
-Repositório para armazenar meus arquivos das aulsa sptech
+Repositório para armazenar meus arquivos das aulas sptech
