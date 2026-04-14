@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex 3b - Desafio</title>
+</head>
+<body>
+    <h2>Exercício 3b (Desafio)</h2>
+    <input id="ipt_palavra" type="text" placeholder="Digite uma palavra/frase">
+    <button onclick="validar()">Validar Palíndromo</button>
+    
+    <div id="div_resultado" style="margin-top: 20px;"></div>
+
+    <script>
+        function validar() {
+            let palavraReal = document.getElementById("ipt_palavra").value;
+            
+            let palavraNormalizada = "";
+            let invertidaExibicao = "";
+            
+            for (let i = 0; i < palavraReal.length; i++) {
+                let char = palavraReal[i];
+                if (char !== " ") {
+                    let codigo = char.charCodeAt(0);
+                    if (codigo >= 65 && codigo <= 90) {
+                        palavraNormalizada += String.fromCharCode(codigo + 32);
+                    } else {
+                        palavraNormalizada += char;
+                    }
+                }
+            }
+
+            let invertidaNormalizada = "";
+            for (let i = palavraNormalizada.length - 1; i >= 0; i--) {
+                invertidaNormalizada += palavraNormalizada[i];
+            }
+            
+            for (let i = palavraReal.length - 1; i >= 0; i--) {
+                invertidaExibicao += palavraReal[i];
+            }
+            
+            let isPalindromo = true;
+            if (palavraNormalizada.length !== invertidaNormalizada.length) {
+                isPalindromo = false;
+            } else {
+                for(let i = 0; i < palavraNormalizada.length; i++) {
+                    if (palavraNormalizada[i] !== invertidaNormalizada[i]) {
+                        isPalindromo = false;
+                        break;
+                    }
+                }
+            }
+            
+            let resultado = "";
+            if (isPalindromo) {
+                resultado = `O texto '${palavraReal}' é um palíndromo, porque ao contrário permanece sendo '${palavraReal}'.`;
+            } else {
+                resultado = `O texto '${palavraReal}' NÃO é um palíndromo.`;
+            }
+            
+            document.getElementById("div_resultado").innerHTML = `
+                ${resultado} <br><br>
+                <b>Texto digitado (ao contrário):</b> ${invertidaExibicao}
+            `;
+        }
+    </script>
+</body>
+</html>

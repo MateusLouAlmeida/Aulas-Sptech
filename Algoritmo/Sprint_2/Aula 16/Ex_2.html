@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 2</title>
+</head>
+<body>
+    <h2>Exercício 2a</h2>
+    <input id="ipt_a" type="text" placeholder="Digite um texto">
+    <button onclick="inverterA()">Inverter Texto</button>
+    <div id="out_a"></div>
+
+    <hr>
+
+    <h2>Exercício 2b (Desafio)</h2>
+    <input id="ipt_b" type="text" placeholder="Digite um texto">
+    <button onclick="inverterB()">Inverter Texto</button>
+    <div id="out_b"></div>
+
+    <script>
+        function inverterA() {
+            let invertido = ipt_a.value.split('').reverse().join('');
+            out_a.innerHTML = "<b>Texto invertido:</b> " + invertido;
+        }
+
+        function inverterB() {
+            let texto = ipt_b.value;
+            let invertido = "";
+            for (let i = texto.length - 1; i >= 0; i--) {
+                invertido += texto[i];
+            }
+            out_b.innerHTML = "<b>Texto invertido:</b> " + invertido;
+        }
+    </script>
+</body>
+</html>

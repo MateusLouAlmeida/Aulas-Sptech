@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 3</title>
+</head>
+<body>
+    <h2>Exercício 3a</h2>
+    <input id="ipt_a" type="text" placeholder="Digite uma palavra ou frase">
+    <button onclick="validarA()">Validar Palíndromo</button>
+    <div id="out_a"></div>
+
+    <hr>
+
+    <h2>Exercício 3b (Desafio)</h2>
+    <input id="ipt_b" type="text" placeholder="Digite uma palavra ou frase">
+    <button onclick="validarB()">Validar Palíndromo</button>
+    <div id="out_b"></div>
+
+    <script>
+        function validarA() {
+            let original = ipt_a.value;
+
+            let normalizada = "";
+            for (let i = 0; i < original.length; i++) {
+                if (original[i] !== " ") {
+                    normalizada += original[i];
+                }
+            }
+            normalizada = normalizada.toLowerCase();
+
+            let invertida = normalizada.split('').reverse().join('');
+            let aoContrario = original.split('').reverse().join('');
+
+            if (normalizada === invertida) {
+                out_a.innerHTML = "A palavra \"" + original + "\" é um palíndromo!<br><b>Ao contrário:</b> " + aoContrario;
+            } else {
+                out_a.innerHTML = "A palavra \"" + original + "\" não é um palíndromo.<br><b>Ao contrário:</b> " + aoContrario;
+            }
+        }
+
+        function validarB() {
+            let original = ipt_b.value;
+
+            let normalizada = "";
+            for (let i = 0; i < original.length; i++) {
+                if (original[i] !== " ") {
+                    normalizada += original[i];
+                }
+            }
+            normalizada = normalizada.toLowerCase();
+
+            let invertida = "";
+            for (let i = normalizada.length - 1; i >= 0; i--) {
+                invertida += normalizada[i];
+            }
+
+            let aoContrario = "";
+            for (let i = original.length - 1; i >= 0; i--) {
+                aoContrario += original[i];
+            }
+
+            if (normalizada === invertida) {
+                out_b.innerHTML = "A palavra \"" + original + "\" é um palíndromo!<br><b>Ao contrário:</b> " + aoContrario;
+            } else {
+                out_b.innerHTML = "A palavra \"" + original + "\" não é um palíndromo.<br><b>Ao contrário:</b> " + aoContrario;
+            }
+        }
+    </script>
+</body>
+</html>

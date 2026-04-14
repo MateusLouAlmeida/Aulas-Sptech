@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bet</title>
+</head>
+
+<body>
+    <h2>Qual a ordem de chegada dos jogadores? <br>
+        (Marty, Gama, Thorfin, Arthur Leywin e Rudeus)
+    </h2>
+    <input placeholder="palpite para o 1° lugar" type="text" id="ipt_1">
+    <br>
+    <input placeholder="palpite para o 2° lugar" type="text" id="ipt_2">
+    <br>
+    <input placeholder="palpite para o 3° lugar" type="text" id="ipt_3">
+    <br>
+    <input placeholder="palpite para o 4° lugar" type="text" id="ipt_4">
+    <br>
+    <input placeholder="palpite para o 5° lugar" type="text" id="ipt_5">
+    <br>
+    <button onclick="calcular()">Exibir resultado</button>
+    <h1 id="msg"></h1><br>
+    <div id="id_acerto"></div><br>
+    <div id="id_erro"></div><br>
+    <div id="id_camp"></div>
+    <h2 id="meus_campeoes">Meus Campeões</h2>
+    <input placeholder="Digite o nome do novo campeão" type="text" id="novo_camp"><br>
+    <div id="camp_meu"></div>
+    <button onclick="adicionar()">Adicionar</button>
+    <br><br>
+    <input placeholder="Buscar:" type="text" id="buscar_camp"><br>
+    <button onclick="pesquisar()">Pesquisar:</button>
+    <div id="res_pesq"></div>
+</body>
+
+</html>
+<script>
+    let contagem = 0
+    let vetor = ["Gama", "Marty", "Thorfin", "Rudeus", "Arthur Leywin"]
+    let campeoes = []
+
+    function calcular() {
+        msg.innerHTML = ""
+        let rank1 = ipt_1.value
+        let rank2 = ipt_2.value
+        let rank3 = ipt_3.value
+        let rank4 = ipt_4.value
+        let rank5 = ipt_5.value
+        let acertos = 0
+
+
+        if (rank1 == vetor[0]) {
+            acertos++
+            id_acerto.innerHTML = `Acertou o ${rank1}<br>`
+        }
+        else {
+            id_erro.innerHTML += `Errou o ${rank1}<br>`
+        }
+        if (rank2 == vetor[1]) {
+            acertos++
+            id_acerto.innerHTML += `Acertou o ${rank2}<br>`
+        }
+        else {
+            id_erro.innerHTML += `Errou o ${rank2}<br>`
+        }
+        if (rank3 == vetor[2]) {
+            acertos++
+            id_acerto.innerHTML += `Acertou o ${rank3}<br>`
+        }
+        else {
+            id_erro.innerHTML += `Errou o ${rank3}<br>`
+        }
+        if (rank4 == vetor[3]) {
+            acertos++
+            id_acerto.innerHTML += `Acertou o ${rank4}<br>`
+        }
+        else {
+            id_erro.innerHTML += `Errou o ${rank4}<br>`
+        }
+        if (rank5 == vetor[4]) {
+            acertos++
+            id_acerto.innerHTML += `Acertou o ${rank5}<br>`
+        }
+        else {
+            id_erro.innerHTML += `Errou o ${rank5}`
+        }
+        if (acertos > vetor.length / 2) {
+            msg.innerHTML += `<br>Você conhece bem essa competição!`
+        }
+        else if (acertos <= vetor.lenght / 2) {
+            msg.innerHTML += `<br>Você precisa acompanhar mais essa competição!`
+        }
+        id_camp.innerHTML += `<br>Campeão:<b>${vetor[0].toUpperCase()}🥇 <b>`
+        id_camp.innerHTML += `<br> Acertos: ${acertos}`
+    }
+    function adicionar() {
+        let camp = novo_camp.value
+        campeoes.push(camp)
+        camp_meu.innerHTML = `${campeoes}`
+        console.log(camp)
+    }
+    function pesquisar() {
+        let pesquisa = buscar_camp.value
+        res_pesq.innerHTML = ""
+        if (vetor.includes(pesquisa)) {
+            res_pesq.innerHTML += `O nome ${pesquisa} está na lista oficial <br>`
+        }
+
+        if (campeoes.includes(pesquisa)) {
+            res_pesq.innerHTML += `O nome ${pesquisa} está na sua lista pessoal`
+        }
+
+        if (!vetor.includes(pesquisa) && !campeoes.includes(pesquisa)) {
+            res_pesq.innerHTML = `O nome ${pesquisa} não foi encontrado`
+        }
+
+        if (vetor.includes(pesquisa) && campeoes.includes(pesquisa)) {
+            res_pesq.innerHTML = `O nome ${pesquisa} está em ambas listas`
+        }
+        vetor.splice(0, 1);
+        console.log("Lista", vetor)
+    }
+</script>

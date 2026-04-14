@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex6</title>
+</head>
+
+<body>
+    <button onclick="calcular()">Adoro múltiplos de 5</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    let numero = prompt("Digite um numero")
+    let contador = 0
+    function calcular() {
+        while (contador <= numero) {
+            if (contador % 5 == 0) {
+                id.innerHTML += `${contador}<br>`
+            }
+            contador++
+        }
+
+    }
+</script>

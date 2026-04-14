@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inverter Texto</title>
+</head>
+<body style="text-align: center;">
+    <input type="text" id="ipt_texto" placeholder="Insira o texto desejado">
+    <p>
+        <button onclick="inverter()">Inverter</button>
+    </p>
+    <div id="mensagem"></div>
+</body>
+
+<script>
+    function inverter() {
+        let texto = ipt_texto.value;
+        let texto_invertido = '';
+        
+        for (let i = texto.length -1; i >= 0; i--) {
+            if ()
+            texto_invertido += texto[i];
+        }
+
+        mensagem.innerHTML = texto_invertido;
+    }
+</script>
+</html>

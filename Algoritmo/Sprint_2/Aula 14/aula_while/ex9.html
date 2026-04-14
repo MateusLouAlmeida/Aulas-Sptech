@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex9</title>
+</head>
+
+<body>
+    <button onclick="mostrar()">S2 Pares</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    let valores = prompt("digite um intervalo de números (o número inicial primeiro e depois o segundo e o número inicial deve ser menor que o segundo)")
+    let valores2 = prompt("agora o segundo número, este deve ser maior que o primeiro número)")
+    let lista = []
+    function mostrar() {
+        lista.push(valores)
+        lista.push(valores2)
+        let contador = lista[0]
+        console.log(contador);
+        console.log(valores2);
+
+        while (contador <= lista[1]) {
+            if (contador % 2 == 0) {
+                id.innerHTML += `${contador}<br>`;
+            }
+            contador++
+
+        }
+    }
+</script>

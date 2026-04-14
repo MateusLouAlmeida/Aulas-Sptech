@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex11</title>
+</head>
+
+<body>
+    <label for="msg_tabuada">Selecione a tabuada:</label>
+    <select name="tabuada" id="slc_tabuada">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+    </select>
+    <input type="text" id="ipt_maximo" placeholder="Até que número a tabuada será construída?">
+    <button onclick="calcular()">Ver Tabuada</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    function calcular() {
+        let tabuada = slc_tabuada.value
+        let max = ipt_maximo.value
+        let contador = 1
+        while (contador <= max) {
+            let numero = contador * tabuada
+            if (contador % 2 == 0) {
+                id.innerHTML += `<span style = "color: blue">${tabuada} x ${contador} = ${numero}</span> <br>`
+            }
+            else {
+                id.innerHTML += `<span style = "color: red">${tabuada} x ${contador} = ${numero} </span><br>`
+            }
+            contador++
+        }
+    }
+</script>

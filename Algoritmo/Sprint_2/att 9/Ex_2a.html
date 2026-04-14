@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex 2a - Inverter Texto</title>
+</head>
+<body>
+    <h2>Exercício 2a</h2>
+    <input id="ipt_texto" type="text" placeholder="Digite um texto">
+    <button onclick="inverter()">Inverter Texto</button>
+    
+    <div id="div_resultado" style="margin-top: 20px;"></div>
+
+    <script>
+        function inverter() {
+            let texto = document.getElementById("ipt_texto").value;
+            let invertido = texto.split('').reverse().join('');
+            document.getElementById("div_resultado").innerHTML = `<b>Texto invertido:</b> ${invertido}`;
+        }
+    </script>
+</body>
+</html>

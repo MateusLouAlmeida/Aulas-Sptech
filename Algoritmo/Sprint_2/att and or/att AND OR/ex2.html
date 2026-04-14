@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input placeholder="Qual o tamanho da tela?" type="text" id="id_tamanho">
+    <select placeholder="Cor" name="text" id="id_cor">
+        <option value="1">Preto</option>
+        <option value="2">Prata</option>
+        <option value="3">Azul</option>
+        <option value="4">Vermelho</option>
+    </select>
+    <button onclick="analisar()">Será que ele gosta?</button>
+    <div id="msg"></div>
+    <img style="display: none;" id="img1"
+        src="https://imgs.search.brave.com/nabjC7TKUrsDYPfgzQPeQKb5bhFF5C_L1C_zSk9sr_E/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vc2VncmVk/b3Nkb211bmRvLnI3/LmNvbS93cC1jb250/ZW50L3VwbG9hZHMv/MjAyMC8wMy8xMy1h/dGl0dWRlcy1xdWUt/ZGlmZXJlLWFzLXBl/c3NvYXMtZmVsaXpl/cy1kYXMtb3V0cmFz/LTEuanBnP3Jlc2l6/ZT02NDAsMzYwJnF1/YWxpdHk9ODkmc3Ns/PTE"
+        alt="pessoa feliz">
+    <img style="display: none;" id="img2"
+        src="https://imgs.search.brave.com/deix4h7oPjp2HJLFEvtFg7pL2Ggjb6goHXZqRDBuaRY/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3RpL2ZvdG9z/LWdyYXRpcy90Mi81/NDM3NDUwNS11bWEt/cGVzc29hLWRldGVt/LXVtYS10cmlzdGUt/ZmFjZS1zaW1ib2xv/LXJlZmxldGluZG8t/ZW1vY29lcy1lLWEt/Y29tcGxleGlkYWRl/LWRvLXNlbnRpbWVu/dG9zLW5vcy1mcmVx/dWVudGVtZW50ZS1l/c2NvbmRlci1tdW5k/by1tZW50YWwtc2F1/ZGUtZGlhLWNvbmNl/aXRvLWdyYXRpcy1m/b3RvLmpwZw"
+        alt="pessoa triste">
+
+</body>
+
+</html>
+<script>
+    function analisar() {
+        let tamanho = id_tamanho.value
+        let cor = id_cor.value
+        if (tamanho > "6.5" && cor < "3") {
+            document.getElementById("img1").style.display = "none"
+            document.getElementById("img1").style.display = "block"
+        }
+        else {
+            document.getElementById("img1").style.display = "none"
+            document.getElementById("img2").style.display = "block"
+        }
+    }
+</script>

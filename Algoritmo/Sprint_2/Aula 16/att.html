@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Defina as quantidades de cada doce a ser vendido</h2>
+    Macaron:<input type="text" id="ipt_qtd_macaron">
+    <br>
+    Brigadeiro:<input type="text" id="ipt_qtd_brigadeiro">
+    <br>
+    Cupcake:<input type="text" id="ipt_qtd_cupcake">
+    <br>
+    Cheesecake:<input type="text" id="ipt_qtd_cheesecake">
+    <br><br>
+    <h2>Defina o preço de cada doce</h2>
+    Macaron:<input type="text" id="ipt_vlr_macaron" placeholder="R$:xx.xx">
+    <br>
+    Brigadeiro:<input type="text" id="ipt_vlr_brigadeiro" placeholder="R$:xx.xx">
+    <br>
+    Cupcake:<input type="text" id="ipt_vlr_cupcake" placeholder="R$:xx.xx">
+    <br>
+    Cheesecake:<input type="text" id="ipt_vlr_cheesecake" placeholder="R$:xx.xx">
+    <br><br>
+    <button onclick="verificar()">Verificar vendas</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    function verificar() {
+        let total = 0
+        let msg = ``
+        //imgs
+        let macaron_png = `https://www.pngall.com/wp-content/uploads/2/Macaron-PNG-300x225.png`
+
+        let brigadeiro_png = `https://imgs.search.brave.com/R6yT6tHhGI_P6K09vhhCi6Gk5UofnCktD0SZ0x_nYAQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9wbmcu/cG5ndHJlZS5jb20v/cG5nLXZlY3Rvci8y/MDI1MDcyOS9vdXJt/aWQvcG5ndHJlZS1k/ZWxpY2lvdXMtcm91/bmQtYnJpZ2FkZWly/by13aXRoLWNob2Nv/bGF0ZS1jb2F0aW5n/LXBuZy1pbWFnZV8x/NjkwODU5MS53ZWJw`
+
+        let cupcake_png = ` https://imgs.search.brave.com/7cKihn6KUrY5ELbfDupA7Cumhl-xEHd64mQGOVXIdrE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMzIv/OTk5LzMzNy9zbWFs/bC9oYWxsb3dlZW4t/Y3VwY2FrZS1pc29s/YXRlZC1vbi10cmFu/c3BhcmVudC1iYWNr/Z3JvdW5kLXBuZy5w/bmc`
+
+        let cheesecake_png = `https://www.pngall.com/wp-content/uploads/5/Cheesecake-PNG-Picture.png`
+        // qtd
+        let qtd_macaron = Number(ipt_qtd_macaron.value)
+        let qtd_brigadeiro = ipt_qtd_brigadeiro.value
+        let qtd_cupcake = ipt_qtd_cupcake.value
+        let qtd_cheesecake = ipt_qtd_cheesecake.value
+        // valor
+        let valor_macaron = Number(ipt_vlr_macaron.value)
+        let valor_brigadeiro = Number(ipt_vlr_brigadeiro.value)
+        let valor_cupcake = Number(ipt_vlr_cupcake.value)
+        let valor_cheesecake = Number(ipt_vlr_cheesecake.value)
+        // contador
+        let contador_macaron = qtd_macaron
+        let contador_brigadeiro = qtd_brigadeiro
+        let contador_cupcake = qtd_cupcake
+        let contador_cheesecake = qtd_cheesecake
+
+        if (qtd_macaron >= 0
+            && qtd_brigadeiro >= 0
+            && qtd_cupcake >= 0
+            && qtd_cheesecake >= 0
+            && valor_macaron >= 0
+            && valor_brigadeiro >= 0
+            && valor_cupcake >= 0
+            && valor_cheesecake >= 0
+        ) {
+            for (let i = 0; i <= (qtd_macaron + qtd_brigadeiro + qtd_cupcake + qtd_cheesecake); i++) {
+                if (contador_macaron > 0) {
+                    contador_macaron--
+                    msg += ` Venda ${i + 1}- <img src = "macaron_png" width="69px"> - R$${valor_macaron}<br> `;
+                    total += valor_macaron
+                }
+                else if (contador_brigadeiro > 0) {
+                    contador_brigadeiro--
+                    msg += ` Venda ${i + 1}- <img src = "brigadeiro_png" width="69px"> - R$${valor_brigadeiro}<br> `;
+                    total += valor_brigadeiro
+                }
+                else if (contador_cupcake > 0) {
+                    contador_cupcake--
+                    msg += ` Venda ${i + 1}- <img src = "cupcake_png" width="69px"> - R$${valor_cupcake}<br> `;
+                    total += valor_cupcake
+                }
+                else if (contador_cheesecake > 0) {
+                    contador_cheesecake--
+                    msg += ` Venda ${i + 1}- <img src = "cheesecake_png" width="69px"> - R$${valor_cheesecake}<br> `;
+                    total += valor_cheesecake
+                }
+            }
+            msg += `Com a quantidade de ${qtd_macaron} Macarons, ${qtd_brigadeiro} Brigadeiros, ${qtd_cupcake} 
+            Cupcakes e ${qtd_cheesecake} Cheesecakes, a venda totalizará R$${total.toFixed(2)}`
+        }
+        else {
+            msg = `Numeros invalidos`
+        }
+        id.innerHTML = msg
+
+    }
+</script>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <h1> Crud do Sanji</h1>
+    </div>
+    <p>
+        Digite os ingredientes na lista:
+    </p>
+    <input type="text" id="ipt_cadastro">
+    <br><br>
+    <button onclick="cadastrar()">Botar na lista</button>
+    <br><br>
+    <button onclick="verificar()">Verificar Quantidade</button>
+    <br><br>
+    <input type="text" id="ipt_busca">
+    <button onclick="pesquisar()">Pesquisar</button>
+    <br><br>
+    <button onclick="exibir()">Exibir estoque</button>
+    <br><br>
+    <input type="text" id="ipt_velha" placeholder="Digite a comida a ser substituída">
+    <input type="text" id="ipt_nova" placeholder="Digite o novo nome">
+    <button onclick="update()">Atualizar</button>
+    <button onclick="apagar()">Deletar</button>
+
+</body>
+
+</html>
+<script>
+    let lista = []
+    function cadastrar() {
+        let comida = ipt_cadastro.value
+        lista.push(comida)
+        console.log(lista);
+
+    }
+    function verificar() {
+        console.log(lista.length);
+
+        if (lista.length < 3) {
+            console.log("Desse jeito, o Luffy devora até o navio");
+        }
+        else if (lista.length >= 3 && lista.length < 8) {
+            console.log("O comilão do Luffy não vai deixar sobrar nenhuma comida");
+        }
+        else if (lista.length > 8 && lista.length <= 10) {
+            console.log("Assim, talvez sobre um pouco para a tripulação");
+        }
+        else if (lista.length > 10) {
+            console.log("Desse jeito vai ter comida para todo mundo e ainda consigo guardar um pouco para a senhorita Nami!");
+        }
+    }
+    function pesquisar() {
+        let busca = ipt_busca.value
+        let contador = 0
+        for (let i = 0; i < lista.length; i++) {
+            if (busca == lista[i]) {
+                contador++
+            }
+        }
+        if (lista.includes(busca)) {
+            console.log(`Temos a comida ${busca} e há ${contador} unidade(s) dela`)
+        }
+        else {
+            console.log(`Alguém vai ter que comprar ${busca}, tá fazendo falta...`);
+        }
+    }
+    function exibir() {
+        let contador = 0
+        let visto = []
+        let repetiu = 0
+        for (let i = 0; i < lista.length; i++) {
+            let ingrediente = lista[i];
+            if (!visto.includes(ingrediente)) {
+                for (let j = 0; j < lista.length; j++) {
+                    if (ingrediente == lista[j]) {
+                        repetiu++
+                    }
+                }
+                if (repetiu == 1) {
+                    console.log(`${ingrediente} (${repetiu} unidade)`)
+                }
+                else {
+                    console.log(`${ingrediente} (${repetiu} unidades)`)
+                }
+                repetiu = 0
+                contador++
+                visto.push(ingrediente);
+            }
+        }
+    }
+
+    function update() {
+        let achou = false
+        let comida_nova = ipt_nova.value
+        let comida_velha = ipt_velha.value
+        let contador = 0;
+        for (let i = 0; i < lista.length; i++) {
+            if (comida_velha == lista[i]) {
+                lista[i] = comida_nova
+                achou = true;
+            }
+            if (achou) {
+                console.log(`A comida ${comida_velha} foi modificada`)
+            }
+        }
+    }
+
+    function apagar() {
+        let comida = ipt_cadastro.value
+        let achou = false
+        for (let i = 0; i < lista.length; i++) {
+            if (lista == comida) {
+                lista.splice(i)
+            }
+        }
+        console.log(lista);
+
+    }
+
+</script>

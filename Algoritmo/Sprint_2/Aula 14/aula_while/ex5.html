@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex5</title>
+</head>
+
+<body>
+    <button onclick="contar()">Números cabalísticos</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    function contar() {
+        contador = 0;
+        vetor = [3, 4, 7, 10, 12]
+        while (contador < 31) {
+            if (!vetor.includes(contador)) {
+                id.innerHTML += contador + "<br>"
+            }
+            contador++
+        }
+    }
+</script>

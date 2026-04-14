@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input placeholder="Qtd Coca tu já bebeu" type="text" id="qtd_coca">
+    <button onclick="quantificar()">Ver a quantidade</button>
+    <div id="imgs"></div>
+</body>
+
+</html>
+<script>
+    function quantificar() {
+        imgs.innerHTML = ''
+        let foto = `<img src="http://www.quickmeme.com/img/be/bee10b28123ae5ef002fe74ac01802bede7d23b1640fafd2c29118079f2f0985.jpg" alt="Coquinha">`
+        let cocas = Number(qtd_coca.value)
+        for (let i = 0; i < cocas; i++) {
+            imgs.innerHTML += foto
+        }
+    }
+</script>

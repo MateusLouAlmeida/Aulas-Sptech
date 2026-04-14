@@ -1,0 +1,55 @@
+CRUD da Dona Matilde - Contexto
+Dona Matilde é a proprietária de uma charmosa loja de antiguidades no centro da cidade. Sua loja é cheia de itens raros como relógios antigos, porcelanas delicadas, móveis clássicos e objetos históricos curiosos.
+Com o aumento do movimento, Dona Matilde está com dificuldade para controlar o estoque de peças antigas. Por isso, ela pediu sua ajuda para desenvolver um sistema simples que a ajude a organizar melhor sua loja.
+Parte 1)
+Para começar, Dona Matilde precisa cadastrar os itens que chegam à loja e verificar se o estoque está adequado para atrair clientes.
+a) Tenha um campo "Cadastrar Antiguidade" e um botão "Cadastrar";
+b) Ao clicar no botão, o item digitado deve ser adicionado a uma lista (que não aparece para o usuário);
+Obs: Não existe problema em serem registrados valores repetidos.
+c) Crie outro botão chamado "Verificar Estoque" e ao clicar nele, deve ser feito as seguintes verificações:
+Se o número de itens na lista for abaixo de 3, exiba: "A loja está quase vazia, precisamos de mais peças raras!";
+Se o número de itens na lista for entre 3 e 7, exiba: "Temos algumas peças, mas ainda podemos melhorar o acervo";
+Se o número de itens na lista for entre 8 e 10, exiba: "Ótimo! A loja já está bem interessante para os clientes";
+Se o número de itens na lista for acima de 10, exiba: "Excelente! Nossa loja está cheia de relíquias incríveis!";
+Parte 2)
+Agora Dona Matilde quer facilitar a busca e visualização dos itens da loja.
+a) Tenha um campo onde o usuário possa digitar o nome de uma antiguidade e um botão "Pesquisar":
+Ao clicar no botão deve ser realizada uma pesquisa na lista para saber se o item está presente;
+Se estiver, exiba: "Temos o item X e há Y unidade(s) dele na loja";
+Caso não exista, exiba: "Não encontramos o item X, talvez seja hora de procurar essa raridade!".
+Parte 3)
+Com o tempo, Dona Matilde percebeu que precisa corrigir nomes cadastrados incorretamente e também remover itens que já foram vendidos.
+a) Alterar Nome de Antiguidade:
+
+Crie dois campos:
+Um para o nome atual do item;
+Outro para o novo nome;
+E um botão "Alterar Nome".
+Ao clicar:
+Se o item existir, altere todas as ocorrências e exiba:
+"O item 'nome antigo' foi atualizado para 'nome novo'";
+Se não existir, exiba:
+"O item 'nome antigo' não foi encontrado na loja."
+b) Remover Antiguidade:
+
+Crie um campo para digitar o nome do item e um botão "Remover Item";
+Ao clicar:
+Se o item existir, remova todas as ocorrências e exiba:
+"O item 'nome do item' foi removido do estoque.";
+Se não existir, exiba:
+"O item 'nome do item' não está no estoque."
+Com esse sistema, Dona Matilde conseguirá manter sua loja organizada, garantindo que seus clientes sempre encontrem relíquias incríveis!
+
+Parte 4 - Desafio 
+Dona Matilde percebeu que alguns itens aparecem muitas vezes no estoque, e ela quer entender melhor quais são as antiguidades mais repetidas da loja.
+Para isso, ela te propôs um desafio:
+a) Crie um botão chamado "Itens Duplicados";
+
+Ao clicar no botão, o sistema deve analisar toda a lista de antiguidades cadastradas;
+Exiba apenas os itens que aparecem mais de uma vez (ou seja, itens duplicados);
+Para cada item duplicado, mostre também a quantidade de vezes que ele aparece.
+Exemplo de saída:
+- Relógio de bolso (4 unidades)
+- Vaso de porcelana (2 unidades)
+Caso não exista nenhum item duplicado, exiba a mensagem:
+"Não há itens duplicados no estoque, cada peça é única!"

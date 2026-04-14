@@ -1,0 +1,154 @@
+<!-- Criado por Marise Miranda | 2017.1 -->
+<!-- Adaptado por Matheus Matos | 2025.1 -->
+
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mateus' Machine</title>
+</head>
+
+<body bgcolor="#00ffff">
+    <center>
+        <h1>Mateus' Machine</h1>
+
+        <h3>Digite um número decimal:</h3>
+        <input id="demo1" type="text" placeholder="Ex: 42">
+        <br><br>
+
+        <button onclick="contar()">CONVERTER</button>
+
+        <h3>Resultados:</h3>
+        <p>Octal:
+        <div id="demo2"></div>
+        </p>
+        <p>Hexadecimal:
+        <div id="demo3"></div>
+        </p>
+        <p>Binário:
+        <div id="demo4"></div>
+        </p>
+    </center>
+
+
+    <script>
+        let contador = 0
+        let max_decimal
+
+        function contarBinario() {
+            let numero = Number(demo1.value)
+            contador = 0
+            let i = numero
+            while (i > 0) {
+                contador++
+                i = parseInt(i / 2)
+            }
+            max_decimal = 2 ** (contador - 1)
+        }
+
+        function converterBinario() {
+            let binario = []
+            contarBinario()
+            let numero = Number(demo1.value);
+            if (numero === 0) {
+                return ["0"]
+            }
+            while (max_decimal >= 1) {
+                if (numero >= max_decimal) {
+                    binario.push("1")
+                    numero = numero - max_decimal
+                }
+                else {
+                    binario.push("0")
+                }
+                max_decimal = max_decimal / 2
+            }
+            return (binario);
+        }
+
+        function converterOctal() {
+            let bin_octal = converterBinario().slice()
+            let array = []
+            let grupo = []
+            let octal = []
+            let valor = 0
+            let resto = bin_octal.length % 3
+            if (resto != 0) {
+                let faltam = 3 - resto
+                for (let i = 0; i < faltam; i++) {
+                    bin_octal.unshift("0");
+                }
+            }
+            for (let j = 0; j < bin_octal.length; j += 3) {
+                array.push(bin_octal.slice(j, j + 3))
+            }
+            for (let i = 0; i < array.length; i++) {
+                grupo = array[i]
+                grupo.reverse()
+                valor = 0
+                for (let k = 0; k < 3; k++) {
+                    if (grupo[k] == "1") {
+                        valor += 2 ** k
+                    }
+                }
+                octal.push(valor)
+            }
+            return (octal);
+        }
+
+        function converterHexa() {
+            let bin_hexa = converterBinario().slice()
+            let array = []
+            let grupo = []
+            let hexa = []
+            let valor = 0
+            let resto = bin_hexa.length % 4
+            if (resto != 0) {
+                let faltam = 4 - resto
+                for (let i = 0; i < faltam; i++) {
+                    bin_hexa.unshift("0");
+                }
+            }
+            for (let j = 0; j < bin_hexa.length; j += 4) {
+                array.push(bin_hexa.slice(j, j + 4))
+            }
+            for (let i = 0; i < array.length; i++) {
+                grupo = array[i]
+                grupo.reverse()
+                valor = 0
+                for (let k = 0; k < 4; k++) {
+                    if (grupo[k] == "1") {
+                        valor += 2 ** k
+                    }
+                }
+                if (valor >= 10) {
+                    hexa.push("ABCDEF"[valor - 10])
+                }
+                else {
+                    hexa.push(valor)
+                }
+            }
+            return (hexa);
+        }
+        function ConverterDecimal() {
+            let bin_decimal = converterBinario().slice()
+            let oct_decimal = converterOctal().slice()
+            let hex_decimal = converterHexa().slice()
+        }
+
+        function contar() {
+            let binario = converterBinario()
+            let octal = converterOctal()
+            let hexa = converterHexa()
+            demo4.innerHTML = `${binario.join("")}`;
+            demo2.innerHTML = `${octal.join("")}`;
+            demo3.innerHTML = `${hexa.join("")}`;
+
+        }
+
+    </script>
+</body>
+
+</html>

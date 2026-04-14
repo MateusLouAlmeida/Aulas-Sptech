@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex 1b - Desafio</title>
+</head>
+<body>
+    <h2>Exercício 1b (Desafio)</h2>
+    <input id="ipt_valor" type="text" placeholder="Adicionar elemento">
+    <button onclick="adicionar()">Adicionar</button>
+    <button onclick="exibirDuplicados()">Exibir Duplicados</button>
+    <button onclick="removerDuplicatas()">Remover Duplicatas</button>
+    
+    <div id="div_vetor" style="margin-top: 20px;"></div>
+
+    <script>
+        let vetor = [];
+
+        function adicionar() {
+            let valor = document.getElementById("ipt_valor").value;
+            if (valor !== "") {
+                vetor[vetor.length] = valor;
+                document.getElementById("ipt_valor").value = "";
+                atualizarExibicao();
+            }
+        }
+
+        function exibirDuplicados() {
+            let duplicados = [];
+            let unicosDuplicados = [];
+
+            for (let i = 0; i < vetor.length; i++) {
+                let contagem = 0;
+                for (let j = 0; j < vetor.length; j++) {
+                    if (vetor[i] === vetor[j]) {
+                        contagem++;
+                    }
+                }
+                
+                if (contagem > 1) {
+                    let jaAdicionado = false;
+                    for (let k = 0; k < unicosDuplicados.length; k++) {
+                        if (vetor[i] === unicosDuplicados[k]) {
+                            jaAdicionado = true;
+                            break;
+                        }
+                    }
+                    if (!jaAdicionado) {
+                        unicosDuplicados[unicosDuplicados.length] = vetor[i];
+                    }
+                }
+            }
+            
+            if (unicosDuplicados.length > 0) {
+                let txt = unicosDuplicados[0];
+                for (let i = 1; i < unicosDuplicados.length; i++) {
+                    txt += ", " + unicosDuplicados[i];
+                }
+                alert("Itens duplicados: " + txt);
+            } else {
+                alert("Não há itens duplicados.");
+            }
+            atualizarExibicao();
+        }
+
+        function removerDuplicatas() {
+            let novoVetor = [];
+            for (let i = 0; i < vetor.length; i++) {
+                let existe = false;
+                for (let j = 0; j < novoVetor.length; j++) {
+                    if (vetor[i] === novoVetor[j]) {
+                        existe = true;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    novoVetor[novoVetor.length] = vetor[i];
+                }
+            }
+            vetor = novoVetor;
+            atualizarExibicao();
+        }
+
+        function atualizarExibicao() {
+            let div = document.getElementById("div_vetor");
+            let html = "<b>Vetor atual:</b><br>";
+            for (let i = 0; i < vetor.length; i++) {
+                html += vetor[i] + "<br>";
+            }
+            div.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

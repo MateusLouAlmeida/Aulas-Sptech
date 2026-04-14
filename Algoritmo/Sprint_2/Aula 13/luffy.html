@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRA DESAFIO SPTECH</title>
+</head>
+
+<body>
+    <input type="text" id="ipt_bt" placeholder="Quantidade de batalhas"><br>
+    <input type="text" id="ipt_mar" placeholder="Quantidade de marinheiros em cada batalha"><br>
+    <input type="text" id="ipt_niku" placeholder="Quantidade de carnes disponíveis"><br>
+    <button onclick="Batalhar()">Batalhar</button><br>
+    <div id="msg"></div>
+</body>
+
+</html>
+<script>
+    function Batalhar() {
+        msg.innerHTML = ""
+        let energia = 100
+        let mensagem = ""
+        let batalha = Number(ipt_bt.value)
+        let marinheiro = Number(ipt_mar.value)
+        let carne = Number(ipt_niku.value)
+        let cabou_carne = ""
+        for (let i = 0; i < batalha; i++) {
+
+            let energia_gasta = marinheiro * 5
+            let ordem = 1 + i;
+            let energia_inicio = energia;
+            let lutas = 0
+            if (cabou_carne == "") {
+                if (energia_gasta >= 100) {
+                    carne = carne - Math.floor(energia_gasta / 100)
+                    energia_gasta = (energia_gasta % 100)
+                    console.log(carne)
+                    lutas = lutas + 20
+                    console.log("lutas =" + lutas);
+                }
+                energia = (energia - energia_gasta)
+                if (energia <= 0) {
+                    if (carne > 0) {
+                        carne--
+                    }
+                    else if (carne < 1) {
+                        cabou_carne = "Energia esgotada, não há mais carne disponível<br>"
+                    }
+                    energia = energia + 100
+                }
+                else if (cabou_carne != "") {
+                    mensagem += `Energia esgotada, não há mais carne disponível<br>`
+                }
+            }
+
+            lutas = lutas + Math.floor(energia_gasta / 5)
+            console.log("lutas2=" + lutas)
+            resultado = `Luffy saiu vitorioso vencendo ${lutas} marinheiros<br>`
+            mensagem += `${i + 1}º batalha Iniciada:<br>
+            Quantidade de Energia no início: ${energia_inicio}<br>
+            Restultado: ${resultado}<br>
+            Carnes restantes ${carne}<br>`
+            energia_inicio = energia_inicio - 10
+        }
+        msg.innerHTML = mensagem
+    }
+</script>

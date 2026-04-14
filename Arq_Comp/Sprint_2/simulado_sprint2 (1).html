@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Sprint II — dat-acqu-ino</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252b3a;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #1e2435;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #0d0f14 0%, #13161e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(0,229,255,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,255,0.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  header h1 span { color: var(--accent); }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #progress-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  #progress-counter span { color: var(--accent); font-weight: 700; }
+
+  /* Layout */
+  .layout {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 65px);
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sidebar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 4px 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .q-btn {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: left;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  .q-btn:hover { border-color: var(--accent); color: var(--text); background: rgba(0,229,255,0.04); }
+  .q-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.08); }
+  .q-btn.answered { border-color: rgba(124,58,237,0.4); color: var(--text); background: rgba(124,58,237,0.06); }
+  .q-btn.answered::after {
+    content: '●';
+    font-size: 8px;
+    color: var(--accent2);
+    margin-left: auto;
+  }
+  .q-btn.active.answered { border-color: var(--accent); }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px 40px;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-number::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .question-text {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+  .question-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    color: #7dd3fc;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid rgba(125,211,252,0.15);
+  }
+
+  /* Answer options */
+  .answers {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .answer-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14.5px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .answer-option:hover {
+    border-color: rgba(0,229,255,0.4);
+    background: rgba(0,229,255,0.03);
+  }
+  .answer-option.selected {
+    border-color: var(--accent2);
+    background: rgba(124,58,237,0.1);
+  }
+  .answer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 22px;
+    margin-top: 1px;
+  }
+  .answer-option.selected .answer-label { color: #a78bfa; }
+
+  /* Result states */
+  .answer-option.correct {
+    border-color: var(--correct) !important;
+    background: rgba(16,185,129,0.1) !important;
+  }
+  .answer-option.correct .answer-label { color: var(--correct); }
+  .answer-option.wrong {
+    border-color: var(--wrong) !important;
+    background: rgba(239,68,68,0.1) !important;
+  }
+  .answer-option.wrong .answer-label { color: var(--wrong); }
+  .answer-option.show-correct {
+    border-color: rgba(16,185,129,0.5) !important;
+    background: rgba(16,185,129,0.05) !important;
+  }
+  .answer-option.show-correct .answer-label { color: rgba(16,185,129,0.7); }
+
+  /* Navigation bar */
+  .nav-bar {
+    max-width: 760px;
+    width: 100%;
+    margin: 24px auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-btn {
+    padding: 10px 24px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--text); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-btn.primary {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
+  }
+  .nav-btn.primary:hover { background: rgba(0,229,255,0.15); }
+  .nav-btn.finish {
+    border-color: var(--accent2);
+    background: rgba(124,58,237,0.12);
+    color: #a78bfa;
+    padding: 12px 32px;
+    font-size: 14px;
+  }
+  .nav-btn.finish:hover { background: rgba(124,58,237,0.22); }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto 20px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  /* Result screen */
+  #result-screen {
+    display: none;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeIn 0.4s ease;
+  }
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+  }
+  .score-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .score-value {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .score-subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .score-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .stat-val.c { color: var(--correct); }
+  .stat-val.w { color: var(--wrong); }
+  .stat-val.s { color: var(--muted); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* Wrong answers review */
+  .review-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .review-title::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .review-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .review-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--wrong);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+  .review-q {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .review-q code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    color: #7dd3fc;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .review-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .review-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 5px;
+  }
+  .review-tag.your { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+  .review-tag.correct { background: rgba(16,185,129,0.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
+  .review-tag-label { font-size: 10px; font-family: 'JetBrains Mono', monospace; opacity: 0.7; }
+
+  .restart-btn {
+    display: block;
+    margin: 32px auto 0;
+    padding: 14px 40px;
+    border-radius: 8px;
+    border: 1px solid var(--accent);
+    background: rgba(0,229,255,0.08);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .restart-btn:hover { background: rgba(0,229,255,0.16); transform: translateY(-1px); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">SPRINT II</div>
+  <h1>Simulado <span>dat-acqu-ino</span></h1>
+  <div class="header-right">
+    <div id="progress-counter">Questão <span id="cur-num">1</span> de <span id="total-num">49</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-title">Questões</div>
+  </aside>
+
+  <main class="main" id="main-content">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+
+    <div id="quiz-area">
+      <div class="question-card" id="question-card">
+        <div class="q-number" id="q-num-label">Questão 01 / 49</div>
+        <div class="question-text" id="question-text"></div>
+        <div class="answers" id="answers-container"></div>
+      </div>
+      <div class="nav-bar">
+        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">← Anterior</button>
+        <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Próxima →</button>
+        <button class="nav-btn finish" id="btn-finish" onclick="finishQuiz()" style="display:none;">Finalizar Tentativa ✓</button>
+      </div>
+    </div>
+
+    <div id="result-screen"></div>
+  </main>
+</div>
+
+<script>
+const questions = [
+  {
+    num: 2,
+    question: "2. O parâmetro <code>delimiter: '\\r\\n'</code> utilizado no ReadlineParser serve para:",
+    answers: [
+      "Definir o formato decimal dos dados recebidos.",
+      "Converter os dados automaticamente em JSON.",
+      "Indicar que cada leitura termina com uma quebra de linha.",
+      "Separar os dados por ponto e vírgula.",
+      "Reduzir o tamanho do buffer de comunicação serial."
+    ],
+    correct: 2
+  },
+  {
+    num: 3,
+    question: "3. O comando <code>await serialport.SerialPort.list()</code> tem como principal função:",
+    answers: [
+      "Verificar os dados vindos da API.",
+      "Atualizar o gráfico no navegador.",
+      "Iniciar o servidor web local.",
+      "Listar todas as portas seriais disponíveis no sistema.",
+      "Buscar as tabelas do banco de dados MySQL."
+    ],
+    correct: 3
+  },
+  {
+    num: 4,
+    question: "4. Quando <code>HABILITAR_OPERACAO_INSERIR</code> está definido como <code>false</code>, o que ocorre?",
+    answers: [
+      "O banco é desconectado do sistema.",
+      "O servidor não é iniciado.",
+      "Os dados são apenas exibidos no console, sem inserção no banco.",
+      "A função serial é ignorada.",
+      "Nenhum dado é enviado ao Arduino."
+    ],
+    correct: 2
+  },
+  {
+    num: 5,
+    question: "5. A função <code>poolBancoDados.execute(...)</code> é utilizada para:",
+    answers: [
+      "Inserir valores lidos do Arduino na tabela medida.",
+      "Calcular a média dos sensores.",
+      "Estabelecer a conexão inicial com o banco.",
+      "Criar novas tabelas no banco.",
+      "Reiniciar o servidor MySQL."
+    ],
+    correct: 0
+  },
+  {
+    num: 6,
+    question: "6. Dentro da função <code>servidor()</code>, o bloco <code>app.use(...)</code> tem como finalidade:",
+    answers: [
+      "Permitir que o navegador acesse a API de diferentes origens (CORS).",
+      "Configurar as variáveis de ambiente.",
+      "Inicializar o banco de dados local.",
+      "Renderizar os gráficos Chart.js.",
+      "Criar uma conexão persistente com o Arduino."
+    ],
+    correct: 0
+  },
+  {
+    num: 7,
+    question: "7. Ao acessar <code>http://localhost:3300/sensores/analogico</code>, o que é retornado?",
+    answers: [
+      "Um gráfico com os últimos valores do Arduino.",
+      "Um JSON com os valores armazenados em memória do sensor analógico.",
+      "Os dados salvos no banco de dados MySQL.",
+      "O status de conexão da porta serial.",
+      "A configuração de hardware utilizada pelo servidor."
+    ],
+    correct: 1
+  },
+  {
+    num: 8,
+    question: "8. No arquivo <code>index.html</code>, qual biblioteca é usada para gerar os gráficos?",
+    answers: [
+      "MySQL2",
+      "D3.js",
+      "Chart.js",
+      "Express",
+      "Socket.io"
+    ],
+    correct: 2
+  },
+  {
+    num: 9,
+    question: "9. A função <code>setInterval(...)</code> no script do <code>index.html</code> executa qual função prática?",
+    answers: [
+      "Conectar automaticamente o Arduino.",
+      "Inserir valores no banco a cada segundo.",
+      "Reiniciar o servidor local.",
+      "Recarregar a página a cada atualização.",
+      "Atualizar periodicamente os dados dos gráficos."
+    ],
+    correct: 4
+  },
+  {
+    num: 10,
+    question: "10. O conjunto de funções <code>serial()</code> e <code>servidor()</code> demonstra:",
+    answers: [
+      "O conceito de multithreading no Node.js.",
+      "O monitoramento direto dos sensores no navegador.",
+      "A integração entre hardware físico e software via API web.",
+      "O uso de Promises em requisições HTTP.",
+      "O uso de filas assíncronas em banco de dados."
+    ],
+    correct: 2
+  },
+  {
+    num: 11,
+    question: "11. No arquivo <code>index.html</code>, a função <code>fetch()</code> é usada para:",
+    answers: [
+      "Subir o servidor Express automaticamente.",
+      "Criar novas tabelas no banco de dados.",
+      "Fazer uma requisição HTTP para a API e obter valores em formato JSON.",
+      "Consultar os dados diretamente do Arduino via USB.",
+      "Atualizar a porta serial do sistema operacional."
+    ],
+    correct: 2
+  },
+  {
+    num: 12,
+    question: "12. O endpoint <code>/sensores/digital</code> definido em <code>main.js</code> retorna:",
+    answers: [
+      "A configuração da porta serial ativa.",
+      "Um objeto com informações do servidor.",
+      "As leituras armazenadas em memória do sensor digital.",
+      "Um arquivo HTML com gráficos.",
+      "Dados salvos no banco MySQL."
+    ],
+    correct: 2
+  },
+  {
+    num: 13,
+    question: "13. No trecho do front-end, a variável <code>paginacao[endpoint]</code> serve para:",
+    answers: [
+      "Converter os valores analógicos em porcentagem.",
+      "Atualizar o tempo de requisição HTTP.",
+      "Controlar a quantidade de dados exibidos no gráfico.",
+      "Resetar o gráfico a cada atualização.",
+      "Armazenar as últimas médias de leitura."
+    ],
+    correct: 2
+  },
+  {
+    num: 14,
+    question: "14. O método <code>response.json()</code> no código JavaScript tem a função de:",
+    answers: [
+      "Transformar os dados em texto puro.",
+      "Exibir o conteúdo no console em formato string.",
+      "Abrir a conexão com o banco de dados.",
+      "Converter a resposta do servidor em objeto JavaScript.",
+      "Definir cabeçalhos de CORS."
+    ],
+    correct: 3
+  },
+  {
+    num: 15,
+    question: "15. No Chart.js, a propriedade <code>data.datasets[0].data</code> representa:",
+    answers: [
+      "Os valores exibidos na série principal do gráfico.",
+      "A cor de fundo do canvas.",
+      "A lista de rótulos do eixo X.",
+      "O intervalo de tempo das medições.",
+      "O nome do gráfico renderizado."
+    ],
+    correct: 0
+  },
+  {
+    num: 16,
+    question: "16. O atributo <code>backgroundColor</code> dentro do gráfico define:",
+    answers: [
+      "A conexão com o sensor digital.",
+      "O tipo de dado a ser lido.",
+      "A velocidade de atualização da tela.",
+      "O tamanho máximo do eixo Y.",
+      "A cor de preenchimento das barras ou linhas."
+    ],
+    correct: 4
+  },
+  {
+    num: 17,
+    question: "17. O papel do <code>setInterval(() => { ... }, 1000)</code> é:",
+    answers: [
+      "Fechar a conexão com o banco após 1 s.",
+      "Limitar a quantidade de dados armazenados.",
+      "Criar uma nova instância de servidor a cada segundo.",
+      "Executar a leitura e atualização dos gráficos a cada 1 segundo.",
+      "Converter os dados recebidos em tempo real para XML."
+    ],
+    correct: 3
+  },
+  {
+    num: 18,
+    question: "18. Em uma arquitetura cliente-servidor, o front-end do projeto dat-acqu-ino é:",
+    answers: [
+      "O firmware do Arduino.",
+      "O código main.js que executa no Node.js.",
+      "O arquivo index.html que consome a API via HTTP.",
+      "O pacote serialport.",
+      "O banco de dados MySQL."
+    ],
+    correct: 2
+  },
+  {
+    num: 19,
+    question: "19. No fluxo completo da aplicação, qual é a sequência correta dos dados?",
+    answers: [
+      "Gráfico → API → Banco → Arduino",
+      "Arduino → API → Gráfico → Banco",
+      "Arduino → API → Front-End → Usuário",
+      "Banco → Arduino → Front-End",
+      "Front-End → Banco → API"
+    ],
+    correct: 2
+  },
+  {
+    num: 20,
+    question: "20. A variável <code>tempo[endpoint]</code> utilizada no <code>index.html</code> controla:",
+    answers: [
+      "O tempo total de execução da API.",
+      "A frequência de atualização da porta serial.",
+      "O número de segundos decorridos entre as leituras.",
+      "A ordenação das leituras no banco MySQL.",
+      "O limite de conexões simultâneas."
+    ],
+    correct: 2
+  },
+  {
+    num: 21,
+    question: "21. Em um circuito com Arduino Uno, o pino A0 é normalmente utilizado para:",
+    answers: [
+      "Alimentar o circuito com 5 V.",
+      "Receber sinais analógicos de sensores.",
+      "Enviar dados digitais para um display.",
+      "Fazer comunicação serial com o computador.",
+      "Gerar pulsos PWM para motores."
+    ],
+    correct: 1
+  },
+  {
+    num: 22,
+    question: "22. O sensor MQ-2 é utilizado para detectar:",
+    answers: [
+      "Temperatura e umidade.",
+      "Distância de objetos.",
+      "Luminosidade ambiente.",
+      "Níveis de gás e fumaça.",
+      "Movimento humano."
+    ],
+    correct: 3
+  },
+  {
+    num: 23,
+    question: "23. O sensor LM35 converte temperatura em uma saída:",
+    answers: [
+      "Analógica proporcional à variação térmica.",
+      "Digital de 0 ou 1.",
+      "PWM ajustável via software.",
+      "Binária de 8 bits.",
+      "Serial de 9600 baud."
+    ],
+    correct: 0
+  },
+  {
+    num: 24,
+    question: "24. O sensor LDR (Light Dependent Resistor) funciona com base em:",
+    answers: [
+      "Absorção de partículas de gás.",
+      "Polarização magnética dos elétrons.",
+      "Variação da resistência conforme a intensidade luminosa.",
+      "Mudança de corrente elétrica pela temperatura.",
+      "Reflexão de ondas ultrassônicas."
+    ],
+    correct: 2
+  },
+  {
+    num: 25,
+    question: "25. O sensor HC-SR04 mede distância por meio de:",
+    answers: [
+      "Sensoriamento por luz visível.",
+      "Um feixe infravermelho contínuo.",
+      "Diferença de potencial entre dois pinos.",
+      "Captura de variação de campo magnético.",
+      "Reflexão de ondas ultrassônicas."
+    ],
+    correct: 4
+  },
+  {
+    num: 26,
+    question: "26. A tabela ASCII foi criada com o objetivo de:",
+    answers: [
+      "Codificar apenas números inteiros em hexadecimal.",
+      "Representar caracteres alfanuméricos em formato binário para sistemas digitais.",
+      "Armazenar instruções de máquina diretamente na CPU.",
+      "Controlar a voltagem entre circuitos do Arduino.",
+      "Converter arquivos de texto em formato de imagem."
+    ],
+    correct: 1
+  },
+  {
+    num: 27,
+    question: "27. Cada caractere da tabela ASCII é representado por:",
+    answers: [
+      "8 bits.",
+      "2 bits.",
+      "16 bits.",
+      "6 bits.",
+      "4 bits."
+    ],
+    correct: 0
+  },
+  {
+    num: 28,
+    question: "28. O caractere correspondente ao valor decimal 65 na tabela ASCII é:",
+    answers: [
+      "&",
+      "@",
+      "a",
+      "A",
+      "#"
+    ],
+    correct: 3
+  },
+  {
+    num: 29,
+    question: "29. Na tabela ASCII, os primeiros códigos (0 a 31) são reservados para:",
+    answers: [
+      "Emojis e ícones gráficos.",
+      "Símbolos matemáticos.",
+      "Dígitos numéricos.",
+      "Caracteres de controle, como Enter e Tab.",
+      "Letras minúsculas."
+    ],
+    correct: 3
+  },
+  {
+    num: 30,
+    question: "30. O caractere espaço \" \" possui o valor decimal:",
+    answers: [
+      "10",
+      "48",
+      "32",
+      "64",
+      "0"
+    ],
+    correct: 2
+  },
+  {
+    num: 31,
+    question: "31. Caso o Arduino não esteja conectado à porta USB, o que acontece na execução do código?",
+    answers: [
+      "O Node.js lança um erro informando que o Arduino não foi encontrado em nenhuma porta serial.",
+      "O código é executado normalmente, mas com dados zerados.",
+      "O servidor continua funcionando, mas sem gráficos.",
+      "O MySQL é encerrado automaticamente.",
+      "A API tenta reconectar automaticamente a cada 10 segundos."
+    ],
+    correct: 0
+  },
+  {
+    num: 32,
+    question: "32. Se o banco de dados MySQL não estiver em execução, qual será o comportamento esperado ao tentar inserir dados?",
+    answers: [
+      "Os dados são gravados em arquivo local .log.",
+      "O Node.js encerra imediatamente sem exibir mensagens.",
+      "A Promise do execute() será rejeitada, gerando um erro de conexão no console.",
+      "O Arduino entra em modo de espera até reconectar.",
+      "O código ignora a falha e continua armazenando em memória."
+    ],
+    correct: 2
+  },
+  {
+    num: 33,
+    question: "33. Quando o navegador tenta acessar a API sem configuração adequada de CORS, ocorre:",
+    answers: [
+      "Interrupção da leitura serial no Arduino.",
+      "Erro de sintaxe no JavaScript do front-end.",
+      "Bloqueio da requisição por política de mesma origem.",
+      "Perda de conexão com o banco MySQL.",
+      "Reset automático do servidor."
+    ],
+    correct: 2
+  },
+  {
+    num: 34,
+    question: "34. Um erro comum na comunicação serial é a leitura de caracteres \"lixo\" no Monitor Serial. Isso ocorre normalmente por:",
+    answers: [
+      "Códigos de controle ASCII corrompidos.",
+      "Buffer de leitura muito grande.",
+      "Falta de driver do sensor.",
+      "Porta USB desconectada durante a execução.",
+      "Diferença de Baud Rate entre Arduino e SerialPort."
+    ],
+    correct: 4
+  },
+  {
+    num: 35,
+    question: "35. O erro <code>\"EADDRINUSE\"</code> ao iniciar a API indica que:",
+    answers: [
+      "O Arduino enviou dados fora do intervalo esperado.",
+      "O servidor não tem permissão para gravar no disco.",
+      "O banco de dados está corrompido.",
+      "O arquivo main.js não foi encontrado.",
+      "A porta 3300 já está sendo utilizada por outro processo."
+    ],
+    correct: 4
+  },
+  {
+    num: 36,
+    question: "36. O sistema binário é formado por quantos símbolos básicos?",
+    answers: [
+      "16",
+      "8",
+      "4",
+      "2",
+      "10"
+    ],
+    correct: 3
+  },
+  {
+    num: 37,
+    question: "37. O número binário 1011₂ equivale a qual valor no sistema decimal?",
+    answers: [
+      "12",
+      "9",
+      "10",
+      "11",
+      "13"
+    ],
+    correct: 3
+  },
+  {
+    num: 38,
+    question: "38. No sistema hexadecimal, a letra A representa qual valor decimal?",
+    answers: [
+      "11",
+      "8",
+      "12",
+      "9",
+      "10"
+    ],
+    correct: 4
+  },
+  {
+    num: 39,
+    question: "39. Ao converter o número decimal 25 para binário, o resultado é:",
+    answers: [
+      "10110",
+      "10011",
+      "11010",
+      "11100",
+      "11001"
+    ],
+    correct: 4
+  },
+  {
+    num: 40,
+    question: "40. Qual das alternativas representa corretamente a sequência crescente de bases numéricas?",
+    answers: [
+      "Octal, Decimal, Binário, Hexadecimal",
+      "Hexadecimal, Decimal, Octal, Binário",
+      "Binário, Octal, Decimal, Hexadecimal",
+      "Decimal, Binário, Octal, Hexadecimal",
+      "Binário, Decimal, Octal, Hexadecimal"
+    ],
+    correct: 2
+  },
+  {
+    num: 41,
+    question: "41. Em um sistema computacional, qual é a principal função da CPU?",
+    answers: [
+      "Conectar dispositivos de rede.",
+      "Controlar e processar instruções.",
+      "Exibir imagens na tela.",
+      "Armazenar dados permanentemente.",
+      "Fornecer energia elétrica ao sistema."
+    ],
+    correct: 1
+  },
+  {
+    num: 42,
+    question: "42. O barramento de dados é responsável por:",
+    answers: [
+      "Converter sinais analógicos em digitais.",
+      "Sincronizar o clock da CPU com o disco rígido.",
+      "Transferir sinais de controle entre o processador e a memória.",
+      "Transportar informações e instruções entre os componentes do sistema.",
+      "Alimentar eletricamente os periféricos."
+    ],
+    correct: 3
+  },
+  {
+    num: 43,
+    question: "43. A memória RAM é classificada como:",
+    answers: [
+      "Permanente, mantendo os dados após o desligamento.",
+      "Somente leitura, usada para firmware.",
+      "Um tipo de memória cache secundária.",
+      "Volátil, pois perde o conteúdo ao desligar o computador.",
+      "Não volátil, como o SSD."
+    ],
+    correct: 3
+  },
+  {
+    num: 44,
+    question: "44. A memória ROM é utilizada para:",
+    answers: [
+      "Executar programas temporários do usuário.",
+      "Controlar o fluxo de dados entre CPU e periféricos.",
+      "Armazenar instruções fixas de inicialização do sistema.",
+      "Executar o sistema operacional.",
+      "Substituir a memória principal em caso de falha."
+    ],
+    correct: 2
+  },
+  {
+    num: 45,
+    question: "45. O ciclo de instrução da CPU é composto basicamente por:",
+    answers: [
+      "Enviar, receber e retransmitir pacotes.",
+      "Carregar, imprimir e salvar arquivos.",
+      "Armazenar, transferir e excluir dados.",
+      "Copiar, mover e criptografar bits.",
+      "Buscar, decodificar e executar instruções."
+    ],
+    correct: 4
+  },
+  {
+    num: 46,
+    question: "46. O dispositivo de entrada é aquele que:",
+    answers: [
+      "Controla a ventilação do hardware.",
+      "Executa cálculos matemáticos complexos.",
+      "Permite a inserção de dados pelo usuário.",
+      "Exibe dados processados pela CPU.",
+      "Armazena dados permanentemente."
+    ],
+    correct: 2
+  },
+  {
+    num: 47,
+    question: "47. Exemplos de dispositivos de saída incluem:",
+    answers: [
+      "CPU e GPU.",
+      "Monitor e impressora.",
+      "Teclado e mouse.",
+      "Disco rígido e SSD.",
+      "Scanner e microfone."
+    ],
+    correct: 1
+  },
+  {
+    num: 48,
+    question: "48. O sistema operacional atua como:",
+    answers: [
+      "Componente físico da placa-mãe.",
+      "Driver de comunicação para periféricos.",
+      "Software intermediário entre hardware e usuário.",
+      "Aplicativo de produtividade do usuário.",
+      "Hardware responsável por controlar a CPU."
+    ],
+    correct: 2
+  },
+  {
+    num: 49,
+    question: "49. O clock de um processador define:",
+    answers: [
+      "O número de núcleos físicos.",
+      "A capacidade máxima do disco rígido.",
+      "O tamanho da memória cache.",
+      "A temperatura máxima da CPU.",
+      "A velocidade de execução das instruções."
+    ],
+    correct: 4
+  },
+  {
+    num: 50,
+    question: "50. A unidade lógica e aritmética (ULA) é responsável por:",
+    answers: [
+      "Sincronizar os dispositivos de rede.",
+      "Gerar sinais de controle de entrada e saída.",
+      "Realizar cálculos e operações lógicas.",
+      "Armazenar instruções na ROM.",
+      "Renderizar gráficos na GPU."
+    ],
+    correct: 2
+  }
+];
+
+const TOTAL = questions.length;
+let currentIdx = 0;
+let userAnswers = new Array(TOTAL).fill(-1);
+let finished = false;
+
+// Build sidebar buttons
+const sidebar = document.getElementById('sidebar');
+const titleDiv = sidebar.querySelector('.sidebar-title');
+questions.forEach((q, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'q-btn';
+  btn.id = `qbtn-${i}`;
+  btn.innerHTML = `<span>Q${String(q.num).padStart(2,'0')}</span>`;
+  btn.onclick = () => goTo(i);
+  sidebar.appendChild(btn);
+});
+
+function renderQuestion(idx) {
+  const q = questions[idx];
+  document.getElementById('cur-num').textContent = idx + 1;
+  document.getElementById('total-num').textContent = TOTAL;
+  document.getElementById('q-num-label').textContent = `Questão ${String(idx+1).padStart(2,'0')} / ${TOTAL}`;
+  document.getElementById('question-text').innerHTML = q.question;
+
+  const container = document.getElementById('answers-container');
+  container.innerHTML = '';
+  const labels = ['a', 'b', 'c', 'd', 'e'];
+  q.answers.forEach((ans, ai) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-option';
+    if (userAnswers[idx] === ai) btn.classList.add('selected');
+    btn.innerHTML = `<span class="answer-label">${labels[ai]}.</span><span>${ans}</span>`;
+    btn.onclick = () => selectAnswer(idx, ai);
+    container.appendChild(btn);
+  });
+
+  // Update progress
+  const answered = userAnswers.filter(a => a !== -1).length;
+  document.getElementById('progress-bar').style.width = `${(answered/TOTAL)*100}%`;
+
+  // Sidebar buttons
+  document.querySelectorAll('.q-btn').forEach((b, i) => {
+    b.classList.remove('active', 'answered');
+    if (i === idx) b.classList.add('active');
+    if (userAnswers[i] !== -1) b.classList.add('answered');
+  });
+
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = idx === 0;
+  const isLast = idx === TOTAL - 1;
+  document.getElementById('btn-next').style.display = isLast ? 'none' : 'block';
+  document.getElementById('btn-finish').style.display = isLast ? 'block' : 'none';
+}
+
+function selectAnswer(qIdx, ansIdx) {
+  if (finished) return;
+  userAnswers[qIdx] = ansIdx;
+  renderQuestion(qIdx);
+}
+
+function navigate(dir) {
+  const next = currentIdx + dir;
+  if (next >= 0 && next < TOTAL) {
+    currentIdx = next;
+    goTo(currentIdx);
+  }
+}
+
+function goTo(idx) {
+  currentIdx = idx;
+  // re-animate card
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  card.offsetHeight; // reflow
+  card.style.animation = '';
+  renderQuestion(idx);
+}
+
+function finishQuiz() {
+  const unanswered = userAnswers.filter(a => a === -1).length;
+  if (unanswered > 0) {
+    const proceed = confirm(`Você tem ${unanswered} questão(ões) sem resposta. Deseja finalizar mesmo assim?`);
+    if (!proceed) return;
+  }
+  finished = true;
+
+  // Calculate score
+  let correct = 0;
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.correct) correct++;
+  });
+  const wrong = questions.filter((q, i) => userAnswers[i] !== -1 && userAnswers[i] !== q.correct).length;
+  const skipped = userAnswers.filter(a => a === -1).length;
+  const score = ((correct / TOTAL) * 10).toFixed(1);
+
+  // Build result
+  document.getElementById('quiz-area').style.display = 'none';
+  const resultScreen = document.getElementById('result-screen');
+  resultScreen.style.display = 'block';
+
+  const labels = ['a', 'b', 'c', 'd', 'e'];
+  const wrongItems = questions
+    .map((q, i) => ({ q, i, ua: userAnswers[i] }))
+    .filter(({ q, ua }) => ua !== -1 && ua !== q.correct);
+
+  let wrongHTML = '';
+  if (wrongItems.length > 0) {
+    wrongHTML = `<div class="review-title">Questões Erradas (${wrongItems.length})</div>`;
+    wrongItems.forEach(({ q, ua }) => {
+      wrongHTML += `
+        <div class="review-item">
+          <div class="review-q">${q.question}</div>
+          <div class="review-row">
+            <div class="review-tag your">
+              <span class="review-tag-label">SUA RESPOSTA</span>
+              &nbsp;${labels[ua]}) ${q.answers[ua]}
+            </div>
+            <div class="review-tag correct">
+              <span class="review-tag-label">RESPOSTA CORRETA</span>
+              &nbsp;${labels[q.correct]}) ${q.answers[q.correct]}
+            </div>
+          </div>
+        </div>`;
+    });
+  } else {
+    wrongHTML = `<div class="review-title" style="color:var(--correct)">Parabéns! Gabarito perfeito! 🎉</div>`;
+  }
+
+  resultScreen.innerHTML = `
+    <div class="score-card">
+      <div class="score-label">Resultado Final — Sprint II</div>
+      <div class="score-value">${score}</div>
+      <div class="score-subtitle">${correct} de ${TOTAL} questões corretas</div>
+      <div class="score-stats">
+        <div class="stat"><div class="stat-val c">${correct}</div><div class="stat-label">Corretas</div></div>
+        <div class="stat"><div class="stat-val w">${wrong}</div><div class="stat-label">Erradas</div></div>
+        <div class="stat"><div class="stat-val s">${skipped}</div><div class="stat-label">Em Branco</div></div>
+      </div>
+    </div>
+    ${wrongHTML}
+    <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+  `;
+
+  // Scroll to top
+  document.querySelector('.main').scrollTop = 0;
+}
+
+function restartQuiz() {
+  finished = false;
+  currentIdx = 0;
+  userAnswers = new Array(TOTAL).fill(-1);
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('result-screen').style.display = 'none';
+  renderQuestion(0);
+}
+
+// Init
+renderQuestion(0);
+</script>
+</body>
+</html>

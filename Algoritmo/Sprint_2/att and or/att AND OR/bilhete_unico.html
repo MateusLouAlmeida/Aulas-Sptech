@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Bilhete Único</title>
+</head>
+
+<body>
+    <h1>Simulador de Preço do Bilhete Único</h1>
+
+    Tipo de passageiro:
+    <select id="sel_passageiro">
+        <option value="comum">Comum</option>
+        <option value="estudante">Estudante</option>
+        <option value="idoso">Idoso/PNE</option>
+    </select>
+    <br><br>
+
+    Tipo de passagem:
+    <select id="sel_passagem">
+        <option value="unica">Passagem única</option>
+        <option value="integracao">Passagem integração</option>
+    </select>
+    <br><br>
+
+    <button onclick="simular()">Simular preço</button>
+
+    <div id="div_resultado"></div>
+
+    <script>
+        function simular() {
+            let passageiro = sel_passageiro.value;
+            let passagem = sel_passagem.value;
+            let precoBase = 0;
+
+            if (passagem == "unica") {
+                precoBase = 4.40;
+            } else {
+                precoBase = 5.90;
+            }
+
+            var precoFinal = precoBase;
+
+            if (passageiro == "estudante") {
+                precoFinal = precoBase * 0.5;
+            } else if (passageiro == "idoso") {
+                precoFinal = 0;
+            }
+
+            div_resultado.innerHTML = `Valor da passagem escolhida: R$${precoFinal.toFixed(2).replace('.', ',')}`;
+        }
+    </script>
+</body>
+
+</html>

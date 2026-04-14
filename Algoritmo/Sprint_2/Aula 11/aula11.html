@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input placeholder="" type="text" id="id_fruta">
+    <span>
+        <button onclick="exibir()">exibir</button>
+    </span>
+    <div id="msg"></div>
+
+</body>
+
+</html>
+<script>
+    let frutas = [("Banana", "Genipapo")]
+    function adicionar() {
+        fruta = id_fruta.value
+        frutas.push(fruta)
+
+    }
+    function exibir() {
+        adicionar()
+        msg.inneHTML = `${frutas}`
+        console.log(frutas)
+    } 
+</script>

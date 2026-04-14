@@ -1,0 +1,90 @@
+Dado a modelagem abaixo, selecione o comando para exibir os atores e seus respectivos dubles em ordem decrescente pelo nome do ator:
+a. SELECT * FROM ator JOIN duble ON fkDuble = idAtor;
+b. SELECT * FROM ator as ator JOIN ator as duble ON duble.fkDuble = ator.idAtor ORDER BY ator.nome DESC;
+c. SELECT * FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor ORDER BY ator.nome DESC;
+d. SELECT * FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor;
+e. SELECT * FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor ORDER BY duble.nome;
+
+----------------------------------------
+
+Dado a modelagem lógica abaixo, exibir os hotéis, sua respectiva matriz e seus respectivos quartos;
+a. select * from hotel as filial join hotel as matriz on filial.fkMatriz = matriz.idHotel join quarto on filial.idhotel = quarto.idQuarto;
+b. select * from hotel as filial join hotel as matriz on filial.fkMatriz = matriz.idHotel join quarto on matriz.idhotel = quarto.fkHotel;
+c. select * from hotel join quarto on idhotel = fkHotel;
+d. select * from hotel, matriz join quarto on idhotel = fkHotel;
+e. select * from hotel as filial join hotel as matriz on filial.fkMatriz = matriz.idHotel join quarto on filial.idhotel = quarto.fkHotel;
+
+----------------------------------------
+
+Dado a modelagem lógica abaixo, criar uma constraint onde o idAtor precisa ser diferente do fkDuble, ou seja, o ator não pode ser dublê dele mesmo:
+a. SELECT * FROM Ator WHERE idAtor <> fkDuble;
+b. ALTER TABLE Duble ADD CONSTRAINT chkRegra CHECK (idAtor <> fkDuble);
+c. ALTER TABLE Ator ADD CONSTRAINT chkRegra CHECK (idAtor <> fkDuble);
+d. DROP TABLE Ator;
+e. UPDATE Ator ADD CONSTRAINT chkRegra CHECK (idAtor <> fkDuble);
+
+----------------------------------------
+
+Dado o comando abaixo, selecionar o comando para atualizar o tipo do quarto Luigi do Hotel Ibis-sp para solteiro;
+a. update quarto WHERE idQuarto = 3 set tipo = 'solteiro';
+b. update hotel set tipo = 'solteiro' WHERE idHotel = 3;
+c. update quarto set tipo = 'solteiro' ON fkHotel = 3 and idQuarto = 3;
+d. update quarto set tipo = 'solteiro' WHERE idQuarto = 3;
+e. update quarto set tipo = 'solteiro' WHERE idQuarto = 3 and fkHotel = 3;
+
+----------------------------------------
+
+Ao realizar o comando para inserir novos hotéis do banco de dados, o usuário recebeu o seguinte erro:insert into hotel values(null, 'Accor SP', '04351-000', 560, 8),(null, 'Accor RJ', '05143-000', 560, null);/* Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`continuada2`.`hotel`, CONSTRAINT `hotel_ibfk_1`FOREIGN KEY (`fkMatriz`) REFERENCES `hotel` (`idHotel`)) */Selecione o comando para solucionar este problema:
+a. insert into hotel values (null, 'Accor SP', '04351-000', 560, null), (null, 'Accor RJ', '05143-000', 560, null); UPDATE hotel set fkMatriz=8 WHERE idHotel=7;
+b. insert into hotel values (null, 'Accor SP', '04351-000', 560, null), (null, 'Accor RJ', '05143-000', 560, null); UPDATE hotel set fkMatriz=10 WHERE idHotel=9;
+c. TRUNCATE TABLE hotel;
+d. DROP TABLE hotel;
+e. não sei
+
+----------------------------------------
+
+Dublês são considerados atores. Os atores podem solicitar dublês de corpo ou ação e na maioria das vezes precisam interpretar cenas de perigo, que precisam de experiência e conhecimento pois podem machucar. O objetivo é tornar aquela cena real sem sofrer nenhum arranhão.Com isso, foi criado um sistema para cadastrar os atores e seus dublês. Sendo que cada ator só pode ter 1 dublê e 1 dublê pode dublar vários atores.Selecione a melhor modelagem lógica de acordo com a regra de negócio:
+a.
+b.
+c.
+d.
+e.
+
+----------------------------------------
+
+Dado a modelagem lógica abaixo, selecione o comando para criar a tabela ator, supondo que a tabela dublê já esteja criada:
+a. CREATE TABLE Ator ( idAtor INT auto_increment, nome VARCHAR(45), dtNasc DATE, fkDuble INT, FOREIGN KEY (fkDuble) REFERENCES Duble(idDuble), PRIMARY KEY (idAtor, fkDuble) )auto_increment = 1000;
+b. CREATE TABLE Ator ( idAtor INT PRIMARY KEY auto_increment, nome VARCHAR(45), dtNasc DATE, fkDuble INT, FOREIGN KEY (fkDuble) REFERENCES Duble(idDuble) )auto_increment = 1000;
+c. CREATE TABLE Ator ( idAtor INT PRIMARY KEY auto_increment, nome VARCHAR(45), dtNasc DATE, fkDuble INT PRIMARY KEY, FOREIGN KEY (fkDuble) REFERENCES Duble(idDuble) )auto_increment = 1000;
+d. CREATE TABLE Ator ( idAtor INT auto_increment, nome VARCHAR(45), dtNasc DATE, fkDuble INT, FOREIGN KEY (idAtor) REFERENCES Duble(fkDuble), PRIMARY KEY (idAtor, fkDuble) )auto_increment = 1000;
+e. CREATE TABLE Ator ( idAtor INT auto_increment = 1000, nome VARCHAR(45), dtNasc DATE, fkDuble INT, FOREIGN KEY (fkDuble) REFERENCES Duble(idDuble), PRIMARY KEY (idAtor, idDuble) );
+
+----------------------------------------
+
+Dado a modelagem lógica abaixo, criar a tabela quarto supondo que a tabela hotel já esteja criada;
+a. create table quarto ( idQuarto int primary key, nome varchar(45), andar int, tipo varchar (45), constraint chkTipo check (tipo = 'casal' or tipo = 'solteiro'), fkHotel int, foreign key (fkHotel) references hotel (idHotel) );
+b. create table quarto ( idQuarto int, nome varchar(45), andar int, tipo varchar (45), constraint chkTipo check (tipo = 'casal' or tipo = 'solteiro'), fkHotel int, primary key (idQuarto, fkHotel), foreign key (fkHotel) references hotel (idHotel) );
+c. create table quarto ( idQuarto int primary key, nome varchar(45), andar int, tipo varchar (45), constraint chkTipo check (tipo = 'casal' or tipo = 'solteiro'), fkHotel int, foreign key (fkHotel) references quarto (idQuarto) );
+d. create table quarto ( idQuarto int, nome varchar(45), andar int, tipo varchar (45), constraint chkTipo check (tipo = 'casal' or tipo = 'solteiro'), fkHotel int, primary key (idQuarto, fkHotel), foreign key (fkHotel) references quarto(idQuarto) );
+e. create table quarto ( idQuarto int primary key, nome varchar(45), andar int, tipo varchar (45), constraint chkTipo check (tipo = 'casal' or tipo = 'solteiro'), fkHotel int primary key, foreign key (fkHotel) references hotel(idHotel) );
+
+----------------------------------------
+
+Dado a modelagem lógica abaixo, exibir os dados dos hotéis e suas respectivas matrizes;
+a. select * from hotel as filial join hotel as matriz on filial.fkMatriz = matriz.idHotel;
+b. select * from hotel;
+c. select * from hotel join hotel on fkMatriz = idHotel;
+d. select * from hotel as filial join hotel as matriz on matriz.fkMatriz = filial.idHotel;
+e. select * from hotel as filial join hotel as matriz;
+
+----------------------------------------
+
+Dado a modelagem abaixo, selecione o comando para exibir apenas o nome e data de nascimento dos atores e o nome e a data de nascimento dos seus respectivos dublês em ordem crescente pelo nome do dublê onde o nome do Ator começa com a letra A:
+a. SELECT nome, dtNasc FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor WHERE ator.nome LIKE 'A%' ORDER BY duble.nome;
+b. SELECT ator.nome, ator.dtNasc, duble.nome, duble.dtNasc FROM ator as ator JOIN ator as duble ON duble.fkDuble = ator.idAtor WHERE ator.nome LIKE 'A%' ORDER BY duble.nome;
+c. SELECT ator.nome, ator.dtNasc, duble.nome, duble.dtNasc FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor ORDER BY duble.nome LIKE 'A%';
+d. SELECT ator.nome, ator.dtNasc, duble.nome, duble.dtNasc FROM ator as ator JOIN ator as duble ON ator.fkDuble = duble.idAtor WHERE ator.nome LIKE 'A%' ORDER BY duble.nome;
+e. SELECT ator.nome, ator.dtNasc, duble.nome, duble.dtNasc FROM ator JOIN duble ON fkDuble = idAtor WHERE ator.nome LIKE 'A%' ORDER BY duble.nome;
+
+----------------------------------------
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex 3a - Palíndromo</title>
+</head>
+<body>
+    <h2>Exercício 3a</h2>
+    <input id="ipt_palavra" type="text" placeholder="Digite uma palavra/frase">
+    <button onclick="validar()">Validar Palíndromo</button>
+    
+    <div id="div_resultado" style="margin-top: 20px;"></div>
+
+    <script>
+        function validar() {
+            let palavraReal = document.getElementById("ipt_palavra").value;
+            let palavraNormalizada = palavraReal.replace(/\s+/g, '').toLowerCase();
+            let invertidaNormalizada = palavraNormalizada.split('').reverse().join('');
+            
+            let invertidaExibicao = palavraReal.split('').reverse().join('');
+            
+            let resultado = "";
+            if (palavraNormalizada === invertidaNormalizada) {
+                resultado = `O texto '${palavraReal}' é um palíndromo, porque ao contrário permanece sendo '${palavraReal}'.`;
+            } else {
+                resultado = `O texto '${palavraReal}' NÃO é um palíndromo.`;
+            }
+            
+            document.getElementById("div_resultado").innerHTML = `
+                ${resultado} <br><br>
+                <b>Texto digitado (ao contrário):</b> ${invertidaExibicao}
+            `;
+        }
+    </script>
+</body>
+</html>

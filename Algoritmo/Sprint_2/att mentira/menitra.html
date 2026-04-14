@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="msg">
+    <button onclick="analisar()">Analisar</button>
+    <button onclick="desafio()">Desafio</button>
+    <div id="id"></div>
+
+</body>
+
+</html>
+<script>
+
+    let vezes = []
+    let palavra
+    let contagem = 0
+
+    function desafio() {
+        mensagem = msg.value
+        palavra = ""
+        if (mensagem.startsWith("http")) {
+            id.innerHTML = `<h1>Mensagem com link<h1>`
+            palavra = "link"
+        }
+        if (palavra != "link" && palavra != "spam") {
+            id.innerHTML = `<h1>Mensagem comum<h1>`
+        }
+        for (let i = 0; i < vezes.length; i++) {
+            if (mensagem == vezes[i]) {
+                contagem++
+                if (contagem >= 1) {
+                    id.innerHTML = "<h1>Mensagem suspeita<h1>"
+                }
+            }
+        }
+        vezes.push(mensagem)
+    }
+    function analisar() {
+        let mensagem = msg.value;
+        let tamanho = mensagem.length;
+        id.innerHTML = ""
+        if (mensagem.trim() == "") {
+            id.innerHTML = `Digite uma mensagem válida.`
+        }
+        else if (tamanho < 10) {
+            id.innerHTML = `Mensagem muito curta para análise.`
+        }
+        else {
+            id.innerHTML += ` <br>O tamanho é ${tamanho}`;
+
+            let comeco = mensagem.startsWith("Eu");
+            id.innerHTML += `<br>Começa com "Eu"? ${comeco}`;
+
+            let final = mensagem.endsWith(".br");
+            id.innerHTML += `<br>Termina com ".br"? ${final}`;
+
+            let p_letra = mensagem[0];
+            id.innerHTML += `<br>Começa com a letra: ${p_letra}`;
+
+            if (tamanho > 3) {
+                let quarta_letra = mensagem[3];
+                id.innerHTML += `<br>A 4ª letra é ${quarta_letra} `
+                console.log(quarta_letra)
+            };
+
+
+            let u_letra = mensagem[mensagem.length - 1];
+            id.innerHTML += `<br>A última letra é: ${u_letra} `;
+
+            if (mensagem.includes("Bob")) {
+                let indice = mensagem.indexOf("Bob")
+                id.innerHTML += `<br>"Bob" aparece em ${indice}`
+            };
+
+            let aparece = mensagem.includes("bob");
+            id.innerHTML += `<br>Tem "bob"? ${aparece}`;
+
+            let maiusculo = mensagem.toUpperCase();
+            id.innerHTML += `<br>Frase gritando ${maiusculo}`;
+
+            let minusculo = mensagem.toLowerCase();
+            id.innerHTML += `<br>Frase baixinho ${minusculo}`;
+
+            let sem_espaco = mensagem.trim();
+
+            id.innerHTML += `<br>Mensagem sem espaços ${sem_espaco}`;
+
+            if (mensagem.endsWith(".br")) {
+                id.innerHTML += `<br> A mensagem contém um possível link.`
+            };
+
+            if (mensagem.includes("bob")) {
+                id.innerHTML += `<br>Atenção: usuário Bob mencionado na mensagem. `
+            };
+
+            if (mensagem.includes("promoção") || mensagem.includes("grátis")) {
+                id.innerHTML += `<br>Possível mensagem de spam detectada.`
+            };
+
+            if (mensagem.startsWith("Eu")) {
+                id.innerHTML += `<br> A mensagem parece estar escrita em primeira pessoa.`
+            };
+        };
+    };
+
+</script>

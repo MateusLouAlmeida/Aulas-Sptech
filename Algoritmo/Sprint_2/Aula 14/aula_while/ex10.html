@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex10</title>
+</head>
+
+<body>
+    <input type="text" id="ipt_voltas" placeholder="Quantas voltas o carro dará?">
+    <button onclick="mostrar()">Iniciar corrida!</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    function mostrar() {
+        let contador = 0
+        let voltas = ipt_voltas.value
+        while (contador < voltas) {
+            contador++
+            id.innerHTML += `Carro dando a ${contador} volta <br>`
+        }
+        id.innerHTML += `Corrida finalizada`
+    }
+</script>

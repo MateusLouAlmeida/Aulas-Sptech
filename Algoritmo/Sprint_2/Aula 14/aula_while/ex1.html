@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex1</title>
+</head>
+
+<body>
+    <button onclick="contar()">Contar</button>
+    <div id="conta"></div>
+</body>
+
+</html>
+<script>
+    let numero = 1
+    function contar() {
+
+        while (numero < 16) {
+            conta.innerHTML += `${numero}<br>`
+            numero++
+        }
+    }
+</script>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palíndromo</title>
+</head>
+<body style="text-align: center;">
+    <input type="text" id="ipt_palavra" placeholder="Digite uma palavra">
+    <p>
+        <button onclick="validar()">Validar Palíndromo</button>
+    </p>
+    <div id="mensagem"></div>
+</body>
+
+<script>
+    function validar() {
+        let palavra = ipt_palavra.value;
+        let invertida = '';
+        let frase = '';
+        for (let i = palavra.length -1; i >= 0; i--) {
+            invertida += palavra[i];
+        }
+        palavra = palavra.trim();
+        invertida = invertida.trim();
+        if (palavra.toLowerCase() == invertida.toLowerCase()) {
+            frase = `A palavra ${palavra} é um palíndromo!<br><br>`
+        } else {
+            frase = `A palavra ${palavra} não é um palíndromo.<br><br>`
+        }
+
+        mensagem.innerHTML = `${frase} Palavra: ${palavra.toLowerCase()} <br> Palavra Invertida: ${invertida.toLocaleLowerCase()}`
+    }
+</script>
+</html>

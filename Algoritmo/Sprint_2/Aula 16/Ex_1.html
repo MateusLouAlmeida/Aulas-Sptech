@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercício 1</title>
+</head>
+<body>
+    <h2>Exercício 1a</h2>
+    <input id="ipt_a" type="text" placeholder="Adicionar elemento">
+    <button onclick="adicionarA()">Adicionar</button>
+    <button onclick="exibirDupA()">Exibir Duplicados</button>
+    <button onclick="removerDupA()">Remover Duplicatas</button>
+    <div id="out_a"></div>
+
+    <hr>
+
+    <h2>Exercício 1b (Desafio)</h2>
+    <input id="ipt_b" type="text" placeholder="Adicionar elemento">
+    <button onclick="adicionarB()">Adicionar</button>
+    <button onclick="exibirDupB()">Exibir Duplicados</button>
+    <button onclick="removerDupB()">Remover Duplicatas</button>
+    <div id="out_b"></div>
+
+    <script>
+        let vetorA = [];
+        let vetorB = [];
+
+        function renderA() {
+            out_a.innerHTML = "<b>Vetor atual:</b><br>";
+            for (let i = 0; i < vetorA.length; i++) {
+                out_a.innerHTML += vetorA[i] + "<br>";
+            }
+        }
+
+        function adicionarA() {
+            if (ipt_a.value !== "") {
+                vetorA[vetorA.length] = ipt_a.value;
+                ipt_a.value = "";
+                renderA();
+            }
+        }
+
+        function exibirDupA() {
+            let unicos = [];
+            for (let i = 0; i < vetorA.length; i++) {
+                if (vetorA.indexOf(vetorA[i]) !== i) {
+                    if (unicos.indexOf(vetorA[i]) === -1) {
+                        unicos[unicos.length] = vetorA[i];
+                    }
+                }
+            }
+            if (unicos.length > 0) {
+                let txt = unicos[0];
+                for (let i = 1; i < unicos.length; i++) {
+                    txt += ", " + unicos[i];
+                }
+                alert("Duplicados: " + txt);
+            } else {
+                alert("Nenhum duplicado.");
+            }
+            renderA();
+        }
+
+        function removerDupA() {
+            let novo = [];
+            for (let i = 0; i < vetorA.length; i++) {
+                if (novo.indexOf(vetorA[i]) === -1) {
+                    novo[novo.length] = vetorA[i];
+                }
+            }
+            vetorA = novo;
+            renderA();
+        }
+
+        // ----- 1b -----
+
+        function renderB() {
+            out_b.innerHTML = "<b>Vetor atual:</b><br>";
+            for (let i = 0; i < vetorB.length; i++) {
+                out_b.innerHTML += vetorB[i] + "<br>";
+            }
+        }
+
+        function adicionarB() {
+            if (ipt_b.value !== "") {
+                vetorB[vetorB.length] = ipt_b.value;
+                ipt_b.value = "";
+                renderB();
+            }
+        }
+
+        function exibirDupB() {
+            let unicos = [];
+            for (let i = 0; i < vetorB.length; i++) {
+                let contagem = 0;
+                for (let j = 0; j < vetorB.length; j++) {
+                    if (vetorB[i] === vetorB[j]) {
+                        contagem++;
+                    }
+                }
+                if (contagem > 1) {
+                    let jaEsta = false;
+                    for (let k = 0; k < unicos.length; k++) {
+                        if (vetorB[i] === unicos[k]) {
+                            jaEsta = true;
+                            break;
+                        }
+                    }
+                    if (!jaEsta) {
+                        unicos[unicos.length] = vetorB[i];
+                    }
+                }
+            }
+            if (unicos.length > 0) {
+                let txt = unicos[0];
+                for (let i = 1; i < unicos.length; i++) {
+                    txt += ", " + unicos[i];
+                }
+                alert("Duplicados: " + txt);
+            } else {
+                alert("Nenhum duplicado.");
+            }
+            renderB();
+        }
+
+        function removerDupB() {
+            let novo = [];
+            for (let i = 0; i < vetorB.length; i++) {
+                let existe = false;
+                for (let j = 0; j < novo.length; j++) {
+                    if (vetorB[i] === novo[j]) {
+                        existe = true;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    novo[novo.length] = vetorB[i];
+                }
+            }
+            vetorB = novo;
+            renderB();
+        }
+    </script>
+</body>
+</html>

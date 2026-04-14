@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input placeholder = 'Quantos pães francêses tem comido por dia?'type="text" id="pao_id">
+    <input placeholder="Quantos pacotes  de bolacaha tem comido por dia?" type="text" id="bolacha_id">
+    <input placeholder="Quantos copos de toddy por dia?" type="text" id="toddy_id">
+    <button onclick="contar()">Contar calorias</button>
+    <p id="id"></p>
+</body>
+</html>
+    
+</body>
+<script>
+    function contar() {
+        let pao = Number(pao_id.value)
+        let bolacha = Number(bolacha_id.value)
+        let toddy = Number (toddy_id.value)
+        let cal_pao = pao*50
+        let cal_bolacha = bolacha*80
+        let cal_toddy = toddy*70
+        let cal = cal_bolacha + cal_pao + cal_toddy
+        if (cal<200){
+            id.innerHTML = `Parabéns, vai ficar em forma!`
+        }
+        else if (cal>400) {
+             id.innerHTML = `Alerta crítico de saúde !!!`
+        }
+        else if (cal >=200) {
+            id.innerHTML = `Cuidado, vai ficar menos saudável!`
+        }
+    }
+</script>
+

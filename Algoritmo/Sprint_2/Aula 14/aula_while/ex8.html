@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex8</title>
+</head>
+
+<body>
+    <input type="text" id="ipt_frase" placeholder="Digite uma frase">
+    <input type="text" id="ipt_numero" placeholder="Digite um número">
+    <span> <button onclick="mostrar()">Papagaio</button></span>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    function mostrar() {
+        let contador = 0
+        let frase = ipt_frase.value
+        let numero = Number(ipt_numero.value)
+        while (contador < numero) {
+            id.innerHTML += `${frase} <br> `
+            console.log(frase)
+            contador++
+        }
+    }
+
+</script>

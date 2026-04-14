@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex 1a - Duplicados</title>
+</head>
+<body>
+    <h2>Exercício 1</h2>
+    <input id="ipt_valor" type="text" placeholder="Adicionar elemento">
+    <button onclick="adicionar()">Adicionar</button>
+    <button onclick="exibirDuplicados()">Exibir Duplicados</button>
+    <button onclick="removerDuplicatas()">Remover Duplicatas</button>
+    
+    <div id="div_vetor" style="margin-top: 20px;"></div>
+
+    <script>
+        let vetor = [];
+
+        function adicionar() {
+            let valor = document.getElementById("ipt_valor").value;
+            if (valor !== "") {
+                vetor.push(valor);
+                document.getElementById("ipt_valor").value = "";
+                atualizarExibicao();
+            }
+        }
+
+        function exibirDuplicados() {
+            let duplicados = vetor.filter((item, index) => vetor.indexOf(item) !== index);
+            let unicosDuplicados = [...new Set(duplicados)];
+            
+            if (unicosDuplicados.length > 0) {
+                alert("Itens duplicados: " + unicosDuplicados.join(", "));
+            } else {
+                alert("Não há itens duplicados.");
+            }
+            atualizarExibicao();
+        }
+
+        function removerDuplicatas() {
+            vetor = [...new Set(vetor)];
+            atualizarExibicao();
+        }
+
+        function atualizarExibicao() {
+            let div = document.getElementById("div_vetor");
+            div.innerHTML = "<b>Vetor atual:</b><br>";
+            vetor.forEach(item => {
+                div.innerHTML += `${item} <br>`;
+            });
+        }
+    </script>
+</body>
+</html>

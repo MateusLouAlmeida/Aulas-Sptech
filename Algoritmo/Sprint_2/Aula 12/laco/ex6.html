@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input placeholder="Qtd cafe tu já bebeu" type="text" id="qtd_cafe">
+    <button onclick="quantificar()">Ver a quantidade</button>
+    <div id="imgs"></div>
+</body>
+
+</html>
+<script>
+    function quantificar() {
+        imgs.innerHTML = ''
+        let cafe = Number(qtd_cafe.value)
+        for (let i = 0; i < cafe; i++) {
+            imgs.innerHTML += "<img src='https://imgs.search.brave.com/1sFzscjVFzzOphNLFCy3Aprd5QSopixataLl0sZ_trI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9oYXdh/aWlhbi1ibGFjay1s/YXZhLXNlYS1zYWx0/LXJ1c3RpYy13b29k/ZW4tc3Bvb24tdGFi/bGUtMzQ2NDU0MDku/anBn' alt = 'café'>"
+            imgs.innerHTML += "<img src='https://imgs.search.brave.com/1sFzscjVFzzOphNLFCy3Aprd5QSopixataLl0sZ_trI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9oYXdh/aWlhbi1ibGFjay1s/YXZhLXNlYS1zYWx0/LXJ1c3RpYy13b29k/ZW4tc3Bvb24tdGFi/bGUtMzQ2NDU0MDku/anBn' alt = 'café'>"
+            imgs.innerHTML += "<img src='https://imgs.search.brave.com/6Iw-MKo3NiLlgIWAwePLD-Y9UpIjB-h6qc9zjyVkAm8/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTQx/Mjg5NTY1Ni9waG90/by9wcmVwYXJhdGlv/bi1vZi1taXh0dXJl/LWJhYnktZmVlZGlu/Zy1vbi13b29kZW4t/YmFja2dyb3VuZC10/b3AtdmllLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1KeGlN/UldOSWNreXpkeFJp/ell0c1VVOWJtOFZV/QXpHa0l5c0N3ZlNJ/TDZVPQ' alt = 'leite'>"
+        }
+    }
+</script>

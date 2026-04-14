@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aula12</title>
+</head>
+
+<body>
+    <input placeholder="n de pessoas p/ entrar no carro:" type="text" id="id_pessoa">
+    <input placeholder="Maximo de passageiros" type="text" id="id_max_passageiros">
+    <button onclick="exibir()">#Partiu carona</button>
+    <div id="msg"></div>
+</body>
+
+</html>
+<script>
+    function exibir() {
+        let qtd = Number(id_pessoa.value)
+        let passageiros = Number(id_max_passageiros.value)
+        if (passageiros == 0) {
+            passageiros = 5
+        }
+        for (let i = 0; i <= qtd; i++) {
+            if (i == 1) {
+                msg.innerHTML = `Entrou o 1º passageiro (motorista)<br>`
+            }
+            else if (i <= passageiros) {
+                msg.innerHTML += `Entrou o ${i}º passageiro<br>`
+            }
+            else if (i > passageiros) {
+                msg.innerHTML += `O passageiro ${i} terá que esperar<br>`
+            }
+            console.log(passageiros)
+        }
+
+    }
+</script>

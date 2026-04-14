@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex7</title>
+</head>
+
+<body>
+    <button onclick="mostrar()">Viva o 7!</button>
+    <div id="id"></div>
+</body>
+
+</html>
+<script>
+    let contador = 0
+    let numero = prompt("Digite um numero")
+    function mostrar() {
+        while (contador < numero) {
+            if (contador % 7 == 0) {
+                id.innerHTML += `${contador}<br>`
+            }
+
+            contador++
+        }
+
+    }
+</script>
