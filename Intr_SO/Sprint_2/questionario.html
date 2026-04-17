@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz GasControl</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+      header { width: 100%; background: #336699; color: white; padding: 1rem 0; text-align: center; }
+      #quiz-container { max-width: 600px; width: 90%; margin: 1rem auto; }
+      #question-num { font-weight: bold; margin-bottom: 0.5rem; }
+      #question-text { font-size: 1.1em; margin-bottom: 1rem; }
+      .answer-option { margin: 0.5rem 0; }
+      button { padding: 0.6rem 1.2rem; font-size: 1em; background: #336699; color: white; border: none; cursor: pointer; }
+      button:disabled { background: #999; cursor: not-allowed; }
+      #score-container { margin-top: 1rem; font-size: 1.1em; }
+      #review-container { max-width: 600px; width: 90%; margin: 1rem auto; }
+      .question-review { margin-bottom: 0.5rem; }
+      .correct { color: green; }
+      .wrong { color: red; }
+    </style>
+</head>
+<body>
+  <header>
+    <h1>Quiz GasControl</h1>
+    <p>Teste seus conhecimentos sobre Linux e banco de dados</p>
+    <div id="last-score"></div>
+  </header>
+
+  <div id="quiz-container">
+    <div id="question-num"></div>
+    <div id="question-text"></div>
+    <div id="answer-options"></div>
+    <button id="next-button">Iniciar</button>
+    <div id="score-container"></div>
+  </div>
+
+  <div id="review-container" style="display:none;">
+    <h2>Revisão de Respostas</h2>
+    <div id="review-list"></div>
+    <button onclick="location.reload()">Voltar ao Início</button>
+  </div>
+
+  <script>
+    // Definição das 50 perguntas (texto, opções e índice da correta)
+    const quizData = [
+      {
+        question: "Qual comando lista arquivos de um diretório junto com permissões e dono?",
+        options: ["ls -a", "ls -l", "chmod", "cp"],
+        correct: 1
+      },
+      {
+        question: "Qual comando copia arquivos ou diretórios?",
+        options: ["mv", "chmod", "cp", "mkdir"],
+        correct: 2
+      },
+      {
+        question: "Qual comando move ou renomeia arquivos/diretórios?",
+        options: ["mv", "rm", "chmod", "cp"],
+        correct: 0
+      },
+      {
+        question: "Qual comando remove (deleta) um arquivo?",
+        options: ["rmdir", "rm", "mv", "cat"],
+        correct: 1
+      },
+      {
+        question: "Qual comando remove um diretório e todo seu conteúdo recursivamente?",
+        options: ["rmdir", "chmod", "rm -r", "rm"],
+        correct: 2
+      },
+      {
+        question: "Qual comando cria um novo diretório?",
+        options: ["rmdir", "touch", "mkdir", "ls"],
+        correct: 2
+      },
+      {
+        question: "Qual comando exibe o diretório atual (caminho completo)?",
+        options: ["cd", "pwd", "ls", "path"],
+        correct: 1
+      },
+      {
+        question: "Qual comando encerra sua sessão atual no shell?",
+        options: ["logout", "reboot", "exit", "shutdown"],
+        correct: 2
+      },
+      {
+        question: "Qual comando alterna para outro usuário (por exemplo, root)?",
+        options: ["sudo", "su", "useradd", "login"],
+        correct: 1
+      },
+      {
+        question: "Qual comando adiciona um usuário existente a um grupo?",
+        options: ["groupadd <usuário> <grupo>", "usermod -a -G <grupo> <usuário>", "useradd -G <grupo> <usuário>", "chmod"],
+        correct: 1
+      },
+      {
+        question: "Qual comando cria um novo usuário no sistema?",
+        options: ["useradd <usuário>", "usermod <usuário>", "groupadd <usuário>", "addgroup"],
+        correct: 0
+      },
+      {
+        question: "Qual comando altera a senha de um usuário?",
+        options: ["useradd", "usermod", "passwd", "sudo"],
+        correct: 2
+      },
+      {
+        question: "Qual comando abre um editor de texto simples no terminal?",
+        options: ["vi", "nano", "emacs", "cat"],
+        correct: 1
+      },
+      {
+        question: "Qual comando exibe o conteúdo de um arquivo no terminal?",
+        options: ["ls", "grep", "cat", "touch"],
+        correct: 2
+      },
+      {
+        question: "Qual comando busca por um texto dentro de arquivos no terminal?",
+        options: ["find", "grep", "awk", "cat"],
+        correct: 1
+      },
+      {
+        question: "Qual comando mostra as últimas linhas de um arquivo?",
+        options: ["head", "less", "tail", "cat"],
+        correct: 2
+      },
+      {
+        question: "Qual comando mostra as primeiras linhas de um arquivo?",
+        options: ["tail", "less", "head", "ls"],
+        correct: 2
+      },
+      {
+        question: "Qual comando permite alterar o dono de um arquivo?",
+        options: ["chown", "chgrp", "chmod", "usermod"],
+        correct: 0
+      },
+      {
+        question: "Qual comando permite alterar somente o grupo dono de um arquivo?",
+        options: ["chmod", "chown", "chgrp", "groupadd"],
+        correct: 2
+      },
+      {
+        question: "Qual comando modifica as permissões de acesso de um arquivo ou diretório?",
+        options: ["chown", "chmod", "usermod", "ls"],
+        correct: 1
+      },
+      {
+        question: "Em notação simbólica, qual a permissão equivalente ao valor octal 755?",
+        options: ["rwxrwxrwx", "rwxr-xr-x", "rw-r--r--", "rwx------"],
+        correct: 1
+      },
+      {
+        question: "No chmod, o que significam as letras r, w e x nas permissões?",
+        options: ["r=leitura, w=gravação, x=execução", "r=remover, w=escrever, x=executar", "r=todo acesso, w=todo acesso, x=todo acesso", "r=leitura, w=escrita, x=oculto"],
+        correct: 0
+      },
+      {
+        question: "No comando chmod, o que faz a opção -R?",
+        options: ["Aplica recursivamente", "Mostra arquivos alterados", "Silencia erros", "Remove permissões"],
+        correct: 0
+      },
+      {
+        question: "No comando chmod, o que faz a opção -c?",
+        options: ["Mostra arquivos alterados", "Aplica recursivamente", "Silencia erros", "Remove permissões"],
+        correct: 0
+      },
+      {
+        question: "O comando `chmod 777 arquivo` configura quais permissões?",
+        options: ["Nenhuma permissão", "Total (leitura, escrita, execução para todos)", "Só leitura para todos", "Só execução para todos"],
+        correct: 1
+      },
+      {
+        question: "Quem pode definir as permissões de um arquivo?",
+        options: ["Somente o dono do arquivo", "Somente root", "Qualquer usuário do grupo", "Qualquer usuário"],
+        correct: 0
+      },
+      {
+        question: "Qual o usuário com todos os privilégios no Linux?",
+        options: ["admin", "root", "superuser", "sudo"],
+        correct: 1
+      },
+      {
+        question: "Como um usuário comum executa comandos como superusuário?",
+        options: ["exit", "chmod", "sudo <comando>", "passwd"],
+        correct: 2
+      },
+      {
+        question: "Qual comando exibe o nome de usuário atual logado?",
+        options: ["whoami", "who", "id", "logname"],
+        correct: 0
+      },
+      {
+        question: "Qual comando lista os grupos do usuário atual?",
+        options: ["id", "groups", "grep", "ls"],
+        correct: 1
+      },
+      {
+        question: "Qual a porta padrão do MySQL?",
+        options: ["5432", "3306", "8080", "22"],
+        correct: 1
+      },
+      {
+        question: "Qual comando conecta ao MySQL como root (solicita senha)?",
+        options: ["mysql -u root", "mysql -u root -p", "mysql -u root -P", "mysql -h localhost"],
+        correct: 1
+      },
+      {
+        question: "Para acessar o MySQL da VM a partir do host, que endereço usar?",
+        options: ["192.168.56.1:3306", "127.0.0.1:3306", "localhost:22", "0.0.0.0:3306"],
+        correct: 1
+      },
+      {
+        question: "Qual software de virtualização está em uso (VM)?",
+        options: ["VMware", "Docker", "KVM", "VirtualBox"],
+        correct: 3
+      },
+      {
+        question: "Qual comando exibe uso de disco montado (tamanho total e livre)?",
+        options: ["du", "df", "top", "free"],
+        correct: 1
+      },
+      {
+        question: "Qual comando exibe uso de memória RAM do sistema?",
+        options: ["df", "free", "top", "ps"],
+        correct: 1
+      },
+      {
+        question: "Qual comando reinicia o sistema imediatamente?",
+        options: ["shutdown", "reboot", "exit", "halt"],
+        correct: 1
+      },
+      {
+        question: "Qual comando exibe os processos em execução?",
+        options: ["ps", "jobs", "top", "netstat"],
+        correct: 0
+      },
+      {
+        question: "Qual comando exibe informações da CPU (uso em tempo real)?",
+        options: ["ps", "free", "df", "top"],
+        correct: 3
+      },
+      {
+        question: "Qual comando exibe todas variáveis de ambiente ativas?",
+        options: ["set", "env", "export", "echo"],
+        correct: 1
+      },
+      {
+        question: "Qual comando procura arquivos por nome no sistema?",
+        options: ["grep", "find", "locate", "ls"],
+        correct: 1
+      },
+      {
+        question: "Qual comando exibe a data e hora atuais do sistema?",
+        options: ["date", "cal", "time", "uptime"],
+        correct: 0
+      },
+      {
+        question: "Qual comando exibe o calendário do mês atual?",
+        options: ["cal", "date", "time", "uptime"],
+        correct: 0
+      },
+      {
+        question: "Qual opção do `ls` mostra arquivos ocultos?",
+        options: ["-l", "-a", "-h", "-R"],
+        correct: 1
+      },
+      {
+        question: "Qual comando mostra as 5 primeiras linhas de um arquivo?",
+        options: ["tail -n 5", "head -n 5", "head", "ls -1"],
+        correct: 1
+      },
+      {
+        question: "Qual comando mostra as 5 últimas linhas de um arquivo?",
+        options: ["head -n 5", "tail -n 5", "tail", "tail -f"],
+        correct: 1
+      },
+      {
+        question: "Qual comando exibe interfaces de rede e endereços IP?",
+        options: ["ifconfig", "netstat -r", "ping", "ip a"],
+        correct: 3
+      },
+      {
+        question: "Qual comando exibe informações do kernel/sistema (`uname`)?",
+        options: ["uname -a", "host", "lsmod", "free"],
+        correct: 0
+      }
+    ];
+
+    // Função para embaralhar as perguntas
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    shuffle(quizData);
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionNumElem = document.getElementById('question-num');
+    const questionTextElem = document.getElementById('question-text');
+    const answerOptionsElem = document.getElementById('answer-options');
+    const nextButton = document.getElementById('next-button');
+    const scoreContainer = document.getElementById('score-container');
+    const quizContainer = document.getElementById('quiz-container');
+    const reviewContainer = document.getElementById('review-container');
+    const reviewList = document.getElementById('review-list');
+    const lastScoreElem = document.getElementById('last-score');
+
+    // Exibir último resultado salvo
+    const lastScore = localStorage.getItem('GasQuizScore');
+    if (lastScore !== null) {
+      lastScoreElem.innerHTML = "Último resultado: " + lastScore + " de 50";
+    }
+
+    nextButton.addEventListener('click', () => {
+      if (nextButton.textContent === 'Iniciar') {
+        // Iniciar quiz
+        showQuestion();
+        nextButton.textContent = 'Próxima';
+      } else if (nextButton.textContent === 'Revisar') {
+        showReview();
+      } else {
+        // Coletar resposta atual
+        const options = document.getElementsByName('answer');
+        let selected = -1;
+        for (let opt of options) {
+          if (opt.checked) { selected = parseInt(opt.value); }
+        }
+        if (selected < 0) {
+          alert("Selecione uma resposta antes de continuar.");
+          return;
+        }
+        // Verificar resposta
+        if (selected === quizData[currentQuestion].correct) {
+          score++;
+        }
+        currentQuestion++;
+        if (currentQuestion < quizData.length) {
+          showQuestion();
+        } else {
+          finishQuiz();
+        }
+      }
+    });
+
+    function showQuestion() {
+      const q = quizData[currentQuestion];
+      questionNumElem.textContent = `Pergunta ${currentQuestion+1} de ${quizData.length}`;
+      questionTextElem.textContent = q.question;
+      // Montar opções
+      answerOptionsElem.innerHTML = '';
+      for (let i = 0; i < q.options.length; i++) {
+        const opt = q.options[i];
+        const id = 'opt' + i;
+        const label = document.createElement('label');
+        label.className = 'answer-option';
+        label.setAttribute('for', id);
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'answer';
+        radio.id = id;
+        radio.value = i;
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(opt));
+        answerOptionsElem.appendChild(label);
+      }
+    }
+
+    function finishQuiz() {
+      quizContainer.style.display = 'none';
+      scoreContainer.innerHTML = `<strong>Você acertou ${score} de ${quizData.length}!</strong>`;
+      // Salvar no localStorage
+      localStorage.setItem('GasQuizScore', score);
+      // Mudar botão para Revisar
+      nextButton.textContent = 'Revisar';
+      nextButton.style.display = 'inline-block';
+    }
+
+    function showReview() {
+      reviewContainer.style.display = 'block';
+      quizContainer.style.display = 'none';
+      nextButton.style.display = 'none';
+      // Listar todas perguntas com escolha e correta
+      quizData.forEach((q, idx) => {
+        const userOpt = document.querySelector(`input[name="answer"][value][checked]`);
+      });
+      let reviewHTML = '';
+      for (let i = 0; i < quizData.length; i++) {
+        const q = quizData[i];
+        const userChoice = document.querySelector(`input[name="answer"][value="${q.correct}"]`);
+        // Não temos histórico de escolha, então apenas marcamos todas corretas
+        reviewHTML += `<div class="question-review"><strong>Pergunta ${i+1}:</strong> ${q.question}<br>`;
+        // Mostrar opções
+        q.options.forEach((opt, j) => {
+          const correctClass = (j === q.correct) ? 'correct' : 'wrong';
+          reviewHTML += `<span class="${correctClass}">${opt}</span>&nbsp;&nbsp;`;
+        });
+        reviewHTML += `</div>`;
+      }
+      reviewList.innerHTML = reviewHTML;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Linux & Banco de Dados | SPTech</title>
+<style>
+  :root {
+    --primary: #1a2e4a;
+    --accent: #e91e8c;
+    --teal: #4db8c8;
+    --yellow: #f5b731;
+    --correct: #27ae60;
+    --wrong: #e74c3c;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1a2e4a;
+    --muted: #6b7a8d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    background: var(--accent);
+    color: white;
+    font-weight: 900;
+    font-size: 20px;
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  header h1 { font-size: 18px; font-weight: 700; }
+  header p { font-size: 13px; color: #aac; margin-top: 2px; }
+
+  #start-screen {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+  }
+  .start-card {
+    background: white;
+    border-radius: 20px;
+    padding: 48px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .start-card h2 { font-size: 26px; color: var(--primary); margin-bottom: 12px; }
+  .start-card p { color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
+  .tag {
+    background: var(--bg);
+    color: var(--primary);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tag.pink { background: #fde8f4; color: var(--accent); }
+  .tag.teal { background: #e0f5f8; color: #2a8a9a; }
+
+  .btn-start {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 4px 16px rgba(233,30,140,0.3);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,30,140,0.4); }
+
+  #quiz-screen { display: none; max-width: 720px; margin: 0 auto; padding: 24px 20px; }
+
+  .progress-bar-wrap {
+    background: #dde4ec;
+    border-radius: 10px;
+    height: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--accent));
+    border-radius: 10px;
+    transition: width .4s;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .score-live {
+    background: var(--primary);
+    color: white;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 32px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .q-category {
+    display: inline-block;
+    background: var(--bg);
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 16px;
+  }
+  .q-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--primary);
+    margin-bottom: 24px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--bg);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .15s;
+    color: var(--text);
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: #e0f5f8;
+  }
+  .option-btn .letter {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: white;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid #dde4ec;
+  }
+  .option-btn.correct {
+    background: #d5f5e3;
+    border-color: var(--correct);
+    color: #1a5c35;
+  }
+  .option-btn.correct .letter { background: var(--correct); color: white; border-color: var(--correct); }
+  .option-btn.wrong {
+    background: #fde8e8;
+    border-color: var(--wrong);
+    color: #7b1a1a;
+  }
+  .option-btn.wrong .letter { background: var(--wrong); color: white; border-color: var(--wrong); }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: flex; align-items: flex-start; gap: 10px; }
+  .feedback.correct-fb { background: #d5f5e3; color: #1a5c35; }
+  .feedback.wrong-fb { background: #fde8e8; color: #7b1a1a; }
+  .feedback-icon { font-size: 20px; flex-shrink: 0; }
+
+  .btn-next {
+    display: none;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background .15s;
+    font-family: inherit;
+  }
+  .btn-next:hover { background: #263d5c; }
+  .btn-next.show { display: block; }
+
+  #result-screen {
+    display: none;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+  }
+  .result-card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .result-emoji { font-size: 72px; margin-bottom: 16px; }
+  .result-card h2 { font-size: 28px; color: var(--primary); margin-bottom: 8px; }
+  .result-score {
+    font-size: 56px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 16px 0;
+  }
+  .result-sub { color: var(--muted); margin-bottom: 28px; font-size: 16px; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .result-stat {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .result-stat .val { font-size: 32px; font-weight: 900; color: var(--primary); }
+  .result-stat .lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .result-stat.green .val { color: var(--correct); }
+  .result-stat.red .val { color: var(--wrong); }
+  .btn-retry {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s;
+    font-family: inherit;
+  }
+  .btn-retry:hover { transform: translateY(-2px); }
+
+  code {
+    background: #e8edf3;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SP</div>
+  <div>
+    <h1>Quiz — Linux & Banco de Dados</h1>
+    <p>São Paulo Tech School · Introdução a Sistemas Operacionais</p>
+  </div>
+</header>
+
+<div id="start-screen">
+  <div class="start-card">
+    <h2>🐧 Pronto para o desafio?</h2>
+    <p>50 perguntas em ordem aleatória cobrindo todos os temas das aulas: permissões de arquivo, usuários e grupos no Linux, comandos essenciais, conexão com banco de dados e VirtualBox.</p>
+    <div class="tags">
+      <span class="tag pink">chmod / chown</span>
+      <span class="tag teal">Usuários & Grupos</span>
+      <span class="tag">Comandos Linux</span>
+      <span class="tag pink">MySQL & VM</span>
+      <span class="tag teal">VirtualBox</span>
+      <span class="tag">Permissões Octais</span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Iniciar Quiz 🚀</button>
+  </div>
+</div>
+
+<div id="quiz-screen">
+  <div class="progress-info">
+    <span id="q-counter">Questão 1 de 50</span>
+    <span class="score-live">✔ <span id="live-score">0</span> corretas</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:2%"></div>
+  </div>
+  <div class="question-card">
+    <span class="q-category" id="q-category">Categoria</span>
+    <div class="q-text" id="q-text">Pergunta</div>
+    <div class="options" id="options-container"></div>
+    <div class="feedback" id="feedback">
+      <span class="feedback-icon" id="feedback-icon"></span>
+      <span id="feedback-text"></span>
+    </div>
+  </div>
+  <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima →</button>
+</div>
+
+<div id="result-screen">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <h2 id="result-title">Resultado</h2>
+    <div class="result-score" id="result-score">0/50</div>
+    <p class="result-sub" id="result-sub">Parabéns!</p>
+    <div class="result-grid">
+      <div class="result-stat green">
+        <div class="val" id="res-correct">0</div>
+        <div class="lbl">Corretas</div>
+      </div>
+      <div class="result-stat red">
+        <div class="val" id="res-wrong">0</div>
+        <div class="lbl">Incorretas</div>
+      </div>
+    </div>
+    <button class="btn-retry" onclick="retryQuiz()">🔄 Tentar Novamente</button>
+  </div>
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  // === PERMISSÕES - CHMOD ===
+  {
+    cat: "chmod",
+    q: "O que significa a sigla <code>chmod</code>?",
+    opts: ["change mode","change directory","create home directory","change master"],
+    ans: 0,
+    exp: "chmod significa <strong>change mode</strong> e é usado para alterar permissões de arquivos e diretórios."
+  },
+  {
+    cat: "chmod",
+    q: "O que faz o comando <code>chmod 777 arquivo.txt</code>?",
+    opts: ["Remove todas as permissões","Dá permissão total (leitura, gravação e execução) para todos","Dá permissão apenas ao dono","Bloqueia o arquivo"],
+    ans: 1,
+    exp: "chmod 777 concede <strong>rwx</strong> (leitura, gravação e execução) para Owner, Group e Others — permissão total."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>r</code>?",
+    opts: ["Remove","Run","Read (leitura)","Root"],
+    ans: 2,
+    exp: "<strong>r = read</strong> (leitura). É uma das três permissões básicas junto com w (gravação) e x (execução)."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>w</code>?",
+    opts: ["Web","Write (gravação)","Window","Whoami"],
+    ans: 1,
+    exp: "<strong>w = write</strong> (gravação). Permite criar, modificar e deletar o conteúdo do arquivo."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>x</code>?",
+    opts: ["Exit","eXtract","Execute (execução ou autorização de acesso)","eXclude"],
+    ans: 2,
+    exp: "<strong>x = execute</strong> (execução para arquivos ou autorização de acesso para diretórios)."
+  },
+  {
+    cat: "chmod",
+    q: "No comando <code>chmod ug+rw texto1.txt</code>, o que representa o 'u'?",
+    opts: ["Ubuntu","Unix","User owner (usuário dono)","Upload"],
+    ans: 2,
+    exp: "<strong>u = user owner</strong> — as permissões do usuário dono do arquivo."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>g</code>?",
+    opts: ["Go","Global","Group (grupo dono)","Guest"],
+    ans: 2,
+    exp: "<strong>g = group</strong> — as permissões do grupo dono do arquivo."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>o</code>?",
+    opts: ["Owner","Others (outros usuários do sistema)","Output","Open"],
+    ans: 1,
+    exp: "<strong>o = others</strong> — as permissões dos outros usuários do sistema (nem dono, nem grupo)."
+  },
+  {
+    cat: "chmod",
+    q: "No comando chmod, o que representa a letra <code>a</code>?",
+    opts: ["Admin","Archive","All (todos os usuários)","Append"],
+    ans: 2,
+    exp: "<strong>a = all</strong> — todos os usuários do sistema (equivale a ugo juntos)."
+  },
+  {
+    cat: "chmod",
+    q: "Qual é o valor octal que representa permissão <code>rwx</code> (leitura, gravação e execução)?",
+    opts: ["5","6","7","4"],
+    ans: 2,
+    exp: "rwx = 4+2+1 = <strong>7</strong>. Em binário: 111."
+  },
+  {
+    cat: "chmod",
+    q: "Qual é o valor octal que representa permissão <code>rw-</code> (leitura e gravação)?",
+    opts: ["5","6","7","4"],
+    ans: 1,
+    exp: "rw- = 4+2+0 = <strong>6</strong>. Em binário: 110."
+  },
+  {
+    cat: "chmod",
+    q: "Qual é o valor octal que representa permissão <code>r--</code> (somente leitura)?",
+    opts: ["1","3","4","5"],
+    ans: 2,
+    exp: "r-- = 4+0+0 = <strong>4</strong>. Em binário: 100."
+  },
+  {
+    cat: "chmod",
+    q: "Qual é o valor octal que representa permissão <code>--x</code> (somente execução)?",
+    opts: ["1","2","3","4"],
+    ans: 0,
+    exp: "--x = 0+0+1 = <strong>1</strong>. Em binário: 001."
+  },
+  {
+    cat: "chmod",
+    q: "No comando <code>chmod 777 arquivo</code>, quais são os três grupos de permissão, na ordem?",
+    opts: ["Group | Owner | Others","Owner | Group | Others","Others | Group | Owner","Admin | User | Guest"],
+    ans: 1,
+    exp: "A ordem é sempre <strong>Owner | Group | Others</strong>. Por isso 777 = rwx para todos os três."
+  },
+  {
+    cat: "chmod",
+    q: "O que faz a opção <code>-R</code> no comando chmod?",
+    opts: ["Reverte as permissões","Altera permissões recursivamente em todos os arquivos e subdiretórios","Lê o arquivo","Remove o arquivo"],
+    ans: 1,
+    exp: "chmod <strong>-R</strong> altera as permissões recursivamente em todos os arquivos e subdiretórios."
+  },
+  {
+    cat: "chmod",
+    q: "O que faz o comando <code>chmod ug+rw texto1.txt</code>?",
+    opts: ["Remove rw do usuário e grupo","Adiciona permissão de leitura e gravação para o usuário dono e grupo dono","Adiciona permissão de execução para todos","Troca o dono do arquivo"],
+    ans: 1,
+    exp: "ug+rw <strong>adiciona</strong> permissão de read e write para user owner (u) e group (g) do arquivo texto1.txt."
+  },
+  {
+    cat: "chmod",
+    q: "Qual é o valor octal de <code>r-x</code> (leitura e execução)?",
+    opts: ["3","5","6","7"],
+    ans: 1,
+    exp: "r-x = 4+0+1 = <strong>5</strong>. Em binário: 101."
+  },
+  // === CHOWN ===
+  {
+    cat: "chown",
+    q: "O que significa a sigla <code>chown</code>?",
+    opts: ["change owner","create hostname","chmod owner","channel owner"],
+    ans: 0,
+    exp: "chown significa <strong>change owner</strong> e permite alterar o usuário dono e/ou grupo dono de arquivos."
+  },
+  {
+    cat: "chown",
+    q: "No comando <code>sudo chown -c marcio:marcio arquivo.txt</code>, o que o primeiro 'marcio' representa?",
+    opts: ["O grupo dono","O novo usuário dono","A senha","O diretório"],
+    ans: 1,
+    exp: "No formato <strong>usuário:grupo</strong>, o primeiro valor é o novo <strong>usuário dono</strong>."
+  },
+  {
+    cat: "chown",
+    q: "No comando <code>sudo chown -c marcio:marcio arquivo.txt</code>, o que o segundo 'marcio' representa?",
+    opts: ["O usuário dono","A senha","O novo grupo dono","O diretório"],
+    ans: 2,
+    exp: "No formato usuário:grupo, o segundo valor é o novo <strong>grupo dono</strong> do arquivo."
+  },
+  {
+    cat: "chown",
+    q: "O que faz a opção <code>-c</code> no comando chown?",
+    opts: ["Copia o arquivo","Informa quais arquivos estão sendo alterados","Cria um novo dono","Cancela a operação"],
+    ans: 1,
+    exp: "chown <strong>-c</strong> informa quais arquivos estão tendo seu dono ou grupo alterados."
+  },
+  {
+    cat: "chown",
+    q: "Qual comando permite alterar o usuário dono E o grupo dono de um arquivo?",
+    opts: ["chmod","usermod","chown","addgroup"],
+    ans: 2,
+    exp: "<strong>chown</strong> permite alterar o usuário dono e/ou grupo dono de arquivos."
+  },
+  // === USERMOD ===
+  {
+    cat: "usermod",
+    q: "O que significa a sigla <code>usermod</code>?",
+    opts: ["user model","user mode","user modify","user module"],
+    ans: 1,
+    exp: "usermod significa <strong>user mode</strong> e é usado para modificar usuários do sistema."
+  },
+  {
+    cat: "usermod",
+    q: "No comando <code>sudo usermod -a -G sudo urubu100</code>, qual é a função da opção <code>-a</code>?",
+    opts: ["Apaga o usuário","Adiciona o usuário ao grupo sem removê-lo de outros grupos","Autentica o usuário","Altera a senha"],
+    ans: 1,
+    exp: "<strong>-a</strong> adiciona o usuário ao grupo mantendo sua participação em outros grupos. Sempre use com -G."
+  },
+  {
+    cat: "usermod",
+    q: "No comando <code>sudo usermod -a -G sudo urubu100</code>, o que é 'sudo' neste contexto?",
+    opts: ["O comando em si","O nome do usuário","O novo grupo ao qual o usuário será adicionado","O diretório home"],
+    ans: 2,
+    exp: "Neste contexto, <strong>sudo</strong> após -G é o <strong>nome do novo grupo</strong> ao qual urubu100 será adicionado."
+  },
+  {
+    cat: "usermod",
+    q: "Como remover um usuário de um grupo usando usermod?",
+    opts: ["sudo usermod -d grupo usuario","sudo usermod -G grupos-que-manter nome-do-usuario","sudo usermod -r grupo usuario","sudo usermod --remove grupo usuario"],
+    ans: 1,
+    exp: "Para remover de um grupo, use <strong>sudo usermod -G</strong> listando apenas os grupos que quer MANTER. O usuário será removido dos não listados."
+  },
+  {
+    cat: "usermod",
+    q: "Qual opção do usermod define o nome do novo grupo que o usuário será adicionado?",
+    opts: ["-u","-a","-G","-d"],
+    ans: 2,
+    exp: "<strong>-G</strong> especifica o nome do novo grupo. Combine com -a para não remover o usuário de outros grupos."
+  },
+  // === ADDGROUP & USUÁRIOS ===
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual comando adiciona um novo grupo de usuários no sistema Linux?",
+    opts: ["groupadd","addgroup","mkgroup","newgroup"],
+    ans: 1,
+    exp: "<strong>addgroup</strong> adiciona um novo grupo de usuários no sistema. Ex: sudo addgroup grupo-teste"
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual comando adiciona um novo usuário no Linux?",
+    opts: ["usermod","adduser","mkuser","newuser"],
+    ans: 1,
+    exp: "<strong>adduser</strong> é o comando utilizado para criar um novo usuário no sistema Linux."
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual comando remove um usuário do sistema?",
+    opts: ["rmuser","deluser","userdel","removeuser"],
+    ans: 2,
+    exp: "<strong>userdel</strong> é o comando para remover um usuário do sistema Linux."
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual é a diferença entre um usuário comum e o superusuário (root)?",
+    opts: ["O root não pode criar arquivos","O root tem privilégios administrativos completos no sistema","O root só pode ler arquivos","O root não pode usar o terminal"],
+    ans: 1,
+    exp: "O <strong>superusuário (root)</strong> tem privilégios administrativos completos e pode fazer qualquer operação no sistema."
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual prefixo de comando é usado para executar ações com privilégio de administrador no Linux?",
+    opts: ["root","admin","su","sudo"],
+    ans: 3,
+    exp: "<strong>sudo</strong> (superuser do) permite executar um comando com privilégios de administrador."
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Qual comando troca o usuário ativo no terminal?",
+    opts: ["change","login","su","switch"],
+    ans: 2,
+    exp: "<strong>su</strong> (switch user) troca o usuário ativo na sessão atual do terminal."
+  },
+  {
+    cat: "Grupos & Usuários",
+    q: "Cada arquivo no Linux está associado a quantas identidades de posse?",
+    opts: ["Apenas uma (dono)","Duas: usuário dono e grupo dono","Três: dono, grupo e others","Nenhuma"],
+    ans: 1,
+    exp: "Cada arquivo está associado a <strong>um usuário dono</strong> e <strong>um grupo dono</strong>."
+  },
+  // === COMANDOS LINUX GERAIS ===
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando lista arquivos e diretórios com detalhes de permissões?",
+    opts: ["ls","ls -a","ls -l","dir -l"],
+    ans: 2,
+    exp: "<strong>ls -l</strong> exibe a listagem longa, incluindo permissões, dono, grupo, tamanho e data."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando exibe em qual diretório você está atualmente?",
+    opts: ["where","ls","pwd","cd"],
+    ans: 2,
+    exp: "<strong>pwd</strong> (print working directory) exibe o caminho completo do diretório atual."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando cria um novo diretório no Linux?",
+    opts: ["dir","md","mkdir","newdir"],
+    ans: 2,
+    exp: "<strong>mkdir</strong> (make directory) cria um novo diretório."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando remove um diretório vazio no Linux?",
+    opts: ["rmdir","rm","del","rmv"],
+    ans: 0,
+    exp: "<strong>rmdir</strong> remove um diretório que esteja vazio."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando cria um arquivo vazio ou atualiza a data de modificação de um arquivo existente?",
+    opts: ["new","create","touch","make"],
+    ans: 2,
+    exp: "<strong>touch</strong> cria um arquivo vazio ou atualiza o timestamp de um arquivo existente."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando copia arquivos no Linux?",
+    opts: ["mv","cp","copy","clone"],
+    ans: 1,
+    exp: "<strong>cp</strong> (copy) copia arquivos e diretórios."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando move ou renomeia arquivos no Linux?",
+    opts: ["cp","rn","mv","rename"],
+    ans: 2,
+    exp: "<strong>mv</strong> (move) move ou renomeia arquivos e diretórios."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando remove arquivos no Linux?",
+    opts: ["del","erase","rm","remove"],
+    ans: 2,
+    exp: "<strong>rm</strong> (remove) deleta arquivos. Use com cuidado pois não vai para a lixeira!"
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Como navegar para o diretório home do seu usuário usando um atalho?",
+    opts: ["cd home","cd ~","cd /home","go home"],
+    ans: 1,
+    exp: "<strong>cd ~</strong> é o atalho para navegar diretamente para o diretório home do usuário atual."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual editor de texto de terminal é ensinado nas aulas da SPTech para editar arquivos?",
+    opts: ["vim","gedit","nano","emacs"],
+    ans: 2,
+    exp: "<strong>nano</strong> é o editor de texto em terminal utilizado nas aulas."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Como salvar um arquivo no editor nano?",
+    opts: ["Ctrl + S","Ctrl + Z","Ctrl + O","Ctrl + W"],
+    ans: 2,
+    exp: "No nano, <strong>Ctrl + O</strong> (Write Out) salva o arquivo."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Como sair do editor nano?",
+    opts: ["Ctrl + Q","Ctrl + X","Ctrl + C","Ctrl + Z"],
+    ans: 1,
+    exp: "No nano, <strong>Ctrl + X</strong> fecha o editor (pedindo para salvar se houver alterações)."
+  },
+  {
+    cat: "Comandos Linux",
+    q: "Qual comando encerra a sessão atual do terminal?",
+    opts: ["quit","close","end","exit"],
+    ans: 3,
+    exp: "<strong>exit</strong> encerra a sessão atual do terminal ou troca de usuário."
+  },
+  // === PERMISSÕES - CONCEITOS ===
+  {
+    cat: "Permissões",
+    q: "Como visualizar as permissões de arquivos e diretórios no Linux?",
+    opts: ["chmod","ls -l","perm","cat /permissions"],
+    ans: 1,
+    exp: "<strong>ls -l</strong> exibe as permissões no formato como: <code>-rw-r--r--</code>"
+  },
+  {
+    cat: "Permissões",
+    q: "No resultado de <code>ls -l</code>, o que indica a letra <code>d</code> no início da linha?",
+    opts: ["O arquivo está deletado","É um arquivo de dados","É um diretório","É um arquivo de disco"],
+    ans: 2,
+    exp: "A letra <strong>d</strong> no início das permissões indica que se trata de um <strong>diretório</strong>."
+  },
+  {
+    cat: "Permissões",
+    q: "Para que servem as permissões de arquivos no Linux?",
+    opts: ["Aumentar velocidade do sistema","Controlar quem tem acesso e qual tipo de acesso é permitido","Organizar pastas","Fazer backup automático"],
+    ans: 1,
+    exp: "Permissões <strong>controlam quem pode acessar</strong> um arquivo e qual tipo de acesso é permitido (leitura, gravação e/ou execução)."
+  },
+  {
+    cat: "Permissões",
+    q: "O que é uma sessão de usuário no Linux?",
+    opts: ["Um tipo de arquivo","O tempo entre o login e o logout do usuário","Um grupo de permissões","Um comando do terminal"],
+    ans: 1,
+    exp: "Uma <strong>sessão de usuário</strong> é o período entre o login e o logout de um usuário no sistema."
+  },
+  // === MYSQL & VM ===
+  {
+    cat: "MySQL & VM",
+    q: "Qual porta padrão o MySQL utiliza para conexões?",
+    opts: ["8080","5432","3306","1433"],
+    ans: 2,
+    exp: "O MySQL utiliza por padrão a porta <strong>3306</strong>."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "Qual software é utilizado para criar e gerenciar a máquina virtual nas aulas da SPTech?",
+    opts: ["VMware","Hyper-V","VirtualBox","Parallels"],
+    ans: 2,
+    exp: "<strong>VirtualBox</strong> é o software de virtualização utilizado nas aulas para criar a VM com Lubuntu/Ubuntu."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "Qual sistema operacional é executado como SO Guest (na VM) nas aulas?",
+    opts: ["Windows","macOS","Lubuntu/Ubuntu","Debian"],
+    ans: 2,
+    exp: "Nas aulas, o <strong>Lubuntu/Ubuntu</strong> é o SO Guest (convidado) rodando dentro da VM no VirtualBox."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "Para acessar o MySQL da VM a partir do Windows Host, em qual porta deve-se fazer a requisição?",
+    opts: ["3306","3307","8080","5432"],
+    ans: 1,
+    exp: "A porta <strong>3307</strong> no Windows Host é redirecionada pelo VirtualBox para a porta 3306 do MySQL na VM."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "Qual é a função do VirtualBox no contexto de acesso ao banco de dados da VM?",
+    opts: ["Instalar o MySQL","Criar tabelas no banco","Fazer o redirecionamento de porta entre o Host e a VM","Fazer backup do banco"],
+    ans: 2,
+    exp: "O <strong>VirtualBox faz o redirecionamento de porta</strong>, encaminhando requisições da porta 3307 do Host para a porta 3306 da VM."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "Qual ferramenta gráfica é mencionada nas aulas para conectar ao MySQL?",
+    opts: ["pgAdmin","MySQL Workbench","DBeaver","HeidiSQL"],
+    ans: 1,
+    exp: "<strong>MySQL Workbench</strong> é a ferramenta gráfica usada nas aulas para conectar e gerenciar o banco de dados MySQL."
+  },
+  {
+    cat: "MySQL & VM",
+    q: "O que é necessário configurar no VirtualBox para acessar o MySQL da VM externamente?",
+    opts: ["Instalar o MySQL no Windows","Criar um novo usuário no Linux","Configurar o redirecionamento de porta (port forwarding)","Formatar a VM"],
+    ans: 2,
+    exp: "É preciso configurar o <strong>redirecionamento de porta (port forwarding)</strong> no VirtualBox para que a porta do Host aponte para a porta do MySQL na VM."
+  }
+];
+
+let questions = [];
+let current = 0;
+let score = 0;
+let answered = false;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  questions = shuffle(ALL_QUESTIONS);
+  current = 0;
+  score = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[current];
+  const total = questions.length;
+
+  document.getElementById('q-counter').textContent = `Questão ${current + 1} de ${total}`;
+  document.getElementById('live-score').textContent = score;
+  document.getElementById('progress-bar').style.width = `${((current + 1) / total) * 100}%`;
+  document.getElementById('q-category').textContent = q.cat;
+  document.getElementById('q-text').innerHTML = q.q;
+
+  const feedback = document.getElementById('feedback');
+  feedback.className = 'feedback';
+  feedback.style.display = 'none';
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.className = 'btn-next';
+  btnNext.textContent = current === total - 1 ? 'Ver Resultado 🏆' : 'Próxima →';
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  // Shuffle options while tracking correct answer
+  const indices = shuffle([0, 1, 2, 3].slice(0, q.opts.length));
+  let newAns = 0;
+  const shuffledOpts = indices.map((origIdx, newIdx) => {
+    if (origIdx === q.ans) newAns = newIdx;
+    return q.opts[origIdx];
+  });
+
+  shuffledOpts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectOption(i, newAns, q.exp);
+    container.appendChild(btn);
+  });
+}
+
+function selectOption(selected, correct, explanation) {
+  if (answered) return;
+  answered = true;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('correct');
+    if (i === selected && selected !== correct) b.classList.add('wrong');
+  });
+
+  const feedback = document.getElementById('feedback');
+  const isCorrect = selected === correct;
+
+  if (isCorrect) {
+    score++;
+    document.getElementById('live-score').textContent = score;
+    feedback.className = 'feedback correct-fb show';
+    feedback.style.display = 'flex';
+    document.getElementById('feedback-icon').textContent = '✅';
+    document.getElementById('feedback-text').innerHTML = '<strong>Correto!</strong> ' + explanation;
+  } else {
+    feedback.className = 'feedback wrong-fb show';
+    feedback.style.display = 'flex';
+    document.getElementById('feedback-icon').textContent = '❌';
+    document.getElementById('feedback-text').innerHTML = '<strong>Incorreto.</strong> ' + explanation;
+  }
+
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQuestion() {
+  if (!answered) return;
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const result = document.getElementById('result-screen');
+  result.style.display = 'block';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('result-score').textContent = `${score}/${questions.length}`;
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent = questions.length - score;
+
+  let emoji, title, sub;
+  if (pct >= 90) { emoji='🏆'; title='Excelente!'; sub='Você domina o conteúdo!'; }
+  else if (pct >= 70) { emoji='🎉'; title='Muito Bem!'; sub='Resultado sólido, continue assim!'; }
+  else if (pct >= 50) { emoji='📚'; title='Bom esforço!'; sub='Revise os tópicos com erro e tente novamente.'; }
+  else { emoji='💪'; title='Continue Praticando!'; sub='Revise os materiais e tente de novo!'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = `${pct}% de acerto — ${sub}`;
+}
+
+function retryQuiz() {
+  document.getElementById('result-screen').style.display = 'none';
+  startQuiz();
+}
+</script>
+</body>
+</html>
